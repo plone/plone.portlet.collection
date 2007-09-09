@@ -1,0 +1,9 @@
+Changelog for plone.portlet.collection
+
+    (name of developer listed in brackets)
+
+plone.portlet.collection - 0.1 Unreleased
+
+    - Initial package structure.
+      [zopeskel]
+
