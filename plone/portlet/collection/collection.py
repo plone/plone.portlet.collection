@@ -1,20 +1,31 @@
-from zope.interface import Interface
-
 from zope.interface import implements
 from zope.component import getMultiAdapter
+from zope.component.interface import interfaceToName
 
 from plone.portlets.interfaces import IPortletDataProvider
 from plone.app.portlets.portlets import base
 
 from zope import schema
 from zope.formlib import form
+
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from plone.app.vocabularies.catalog import SearchableTextSource
 from plone.app.vocabularies.catalog import SearchableTextSourceBinder
 from plone.app.form.widgets.uberselectionwidget import UberSelectionWidget
 
+from Products.ATContentTypes.interface import IATTopic
 
 from plone.portlet.collection import CollectionMessageFactory as _
 
+class TargetCollectionSourceBinder(SearchableTextSourceBinder):
+    def __init__(self):
+        # SearchableTextSourceBinder requires 'query' in __init__
+        pass
+        
+    def __call__(self, context):
+        iattopic = interfaceToName(context, IATTopic)
+        return SearchableTextSource(context, base_query={'object_provides':iattopic})
+    
 class ICollectionPortlet(IPortletDataProvider):
     """A portlet which renders the results of a collection object.
     """
@@ -27,11 +38,7 @@ class ICollectionPortlet(IPortletDataProvider):
     target_collection = schema.Choice(title=_(u"Target collection"),
                                   description=_(u"As a path relative to the portal root."),
                                   required=True,
-                                  source=SearchableTextSourceBinder({'is_folderish' : True}))
-                                  # The source above needs to be changed. 
-                                  # Right now it lists everything folderish.
-                                  # It should only list collections
-
+                                  source=TargetCollectionSourceBinder())
 
 
 class Assignment(base.Assignment):
@@ -105,7 +112,10 @@ class Renderer(base.Renderer):
 
         # we should also check that the returned object implements the interfaces for collection
         # So that we don't accidentally return folders and stuff that will make things break
-        return collection
+        if IATTopic.providedBy(collection):
+            return collection
+        else:
+            return None
 
 
     def results(self):
