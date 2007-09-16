@@ -8,6 +8,11 @@ from plone.app.portlets.portlets import base
 from zope import schema
 from zope.formlib import form
 
+from plone.memoize.instance import memoize
+from plone.memoize import ram
+from plone.memoize.compress import xhtml_compress
+from plone.app.portlets.cache import render_cachekey
+
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.app.vocabularies.catalog import SearchableTextSource
 from plone.app.vocabularies.catalog import SearchableTextSourceBinder
@@ -73,9 +78,7 @@ class Renderer(base.Renderer):
     of this class. Other methods can be added and referenced in the template.
     """
 
-
-    render = ViewPageTemplateFile('collection.pt')
-
+    _template = ViewPageTemplateFile('collection.pt')
 
     def __init__(self, *args):
         base.Renderer.__init__(self, *args)
@@ -84,16 +87,15 @@ class Renderer(base.Renderer):
         self.portal_url = portal_state.portal_url()
         self.portal = portal_state.portal()
 
+    @ram.cache(render_cachekey)
+    def render(self):
+        return xhtml_compress(self._template())
 
-    def hasCollection(self):
-        """ 
-        test if we have a collection at all
-        We can use this to check if we should render the portlet at all
-        """
-        return self.getCollection() is not None
+    @property
+    def available(self):
+        return len(self.results())
 
-
-
+    @memoize
     def getCollection(self):
         """ get the collection the portlet is pointing to"""
         collection_path = self.data.target_collection
@@ -117,15 +119,17 @@ class Renderer(base.Renderer):
         else:
             return None
 
-
-    def results(self):
-        """ get the actual result brains from the collection"""
-
+    @memoize
+    def _data(self):
+        """ get the actual result brains from the collection.
+            render_cachekey method calls self._data to compute cache key. """
         collection = self.getCollection()
         results = collection.queryCatalog()
         return results
 
-
+    def results(self):
+        """ return data to template """
+        return self._data()
 
 class AddForm(base.AddForm):
     """Portlet add form.
