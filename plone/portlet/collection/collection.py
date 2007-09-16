@@ -93,7 +93,7 @@ class Renderer(base.Renderer):
 
     @property
     def available(self):
-        return len(self.results())
+        return len(self._data())
 
     @memoize
     def getCollection(self):
@@ -123,8 +123,10 @@ class Renderer(base.Renderer):
     def _data(self):
         """ get the actual result brains from the collection.
             render_cachekey method calls self._data to compute cache key. """
+        results = []
         collection = self.getCollection()
-        results = collection.queryCatalog()
+        if collection is not None:
+            results = collection.queryCatalog()
         return results
 
     def results(self):
