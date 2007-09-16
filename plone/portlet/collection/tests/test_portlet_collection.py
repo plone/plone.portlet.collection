@@ -130,14 +130,11 @@ class TestCollectionQuery(TestCase):
 
         mapping = PortletAssignmentMapping()
         request = self.folder.REQUEST
-        mapping['foo'] = collection.Assignment(header=u"title", target_collection='Members/test_user_1_/collection')
+        mapping['foo'] = collection.Assignment(header=u"title", target_collection='/Members/test_user_1_/collection')
         collectionrenderer = self.renderer(context=None, request=None, view=None, manager=None, assignment=mapping['foo'])
 
         # we want the portlet to return us the same results as the collection
         self.assertEquals(collection_num_items, len(collectionrenderer.results()))
-
-
-
 
 def test_suite():
     from unittest import TestSuite, makeSuite

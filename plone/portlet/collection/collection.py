@@ -22,29 +22,22 @@ from Products.ATContentTypes.interface import IATTopic
 
 from plone.portlet.collection import CollectionMessageFactory as _
 
-class TargetCollectionSourceBinder(SearchableTextSourceBinder):
-    def __init__(self):
-        # SearchableTextSourceBinder requires 'query' in __init__
-        pass
-        
-    def __call__(self, context):
-        iattopic = interfaceToName(context, IATTopic)
-        return SearchableTextSource(context, base_query={'object_provides':iattopic})
-    
 class ICollectionPortlet(IPortletDataProvider):
     """A portlet which renders the results of a collection object.
     """
-    # is it wrong for this one to inherid IPortletDataProvider? 
 
     header = schema.TextLine(title=_(u"Portlet header"),
                              description=_(u"Title of the rendered portlet"),
                              required=True)
 
     target_collection = schema.Choice(title=_(u"Target collection"),
-                                  description=_(u"As a path relative to the portal root."),
+                                  description=_(u"Find the collection which provides the items to list"),
                                   required=True,
-                                  source=TargetCollectionSourceBinder())
+                                  source=SearchableTextSourceBinder({'object_provides' : IATTopic.__identifier__}))
 
+    limit = schema.Int(title=_(u"Limit"),
+                       description=_(u"Specifiy the maximum number of items to show in the portlet"),
+                       required=False)
 
 class Assignment(base.Assignment):
     """
@@ -57,10 +50,12 @@ class Assignment(base.Assignment):
 
     header = u""
     target_collection=None
+    limit = None
 
-    def __init__(self, header=u"", target_collection=None):
+    def __init__(self, header=u"", target_collection=None, limit=None):
         self.header = header
-        self.target_collection=target_collection
+        self.target_collection = target_collection
+        self.limit = limit
 
     @property
     def title(self):
@@ -82,14 +77,16 @@ class Renderer(base.Renderer):
 
     def __init__(self, *args):
         base.Renderer.__init__(self, *args)
-
         portal_state = getMultiAdapter((self.context, self.request), name=u'plone_portal_state')
         self.portal_url = portal_state.portal_url()
         self.portal = portal_state.portal()
 
     @ram.cache(render_cachekey)
     def render(self):
-        return xhtml_compress(self._template())
+        if self.available:
+            return xhtml_compress(self._template())
+        else:
+            return ''
 
     @property
     def available(self):
@@ -127,6 +124,8 @@ class Renderer(base.Renderer):
         collection = self.getCollection()
         if collection is not None:
             results = collection.queryCatalog()
+            if self.data.limit and self.data.limit > 0:
+                results = results[:self.data.limit]
         return results
 
     def results(self):
@@ -141,10 +140,13 @@ class AddForm(base.AddForm):
     constructs the assignment that is being added.
     """
     form_fields = form.Fields(ICollectionPortlet)
+    form_fields['target_collection'].custom_widget = UberSelectionWidget
+    
+    label = _(u"Add Collection Portlet")
+    description = _(u"This portlet display a listing of items from a Collection.")
 
     def create(self, data):
         return Assignment(**data)
-
 
 class EditForm(base.EditForm):
     """Portlet edit form.
@@ -156,3 +158,5 @@ class EditForm(base.EditForm):
     form_fields = form.Fields(ICollectionPortlet)
     form_fields['target_collection'].custom_widget = UberSelectionWidget
 
+    label = _(u"Edit Collection Portlet")
+    description = _(u"This portlet display a listing of items from a Collection.")
