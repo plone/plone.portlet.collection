@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '1.0'
+version = '0.1'
 
 setup(name='plone.portlet.collection',
       version=version,
@@ -14,7 +14,7 @@ setup(name='plone.portlet.collection',
         "Topic :: Software Development :: Libraries :: Python Modules",
         ],
       keywords='',
-      author='Geir B\xc3\xa6kholt \xe2\x80\xc2\xb7\xc2\xa0Jarn',
+      author='Geir Baekholt - Jarn',
       author_email='baekholt@jarn.com',
       url='http://svn.plone.org/svn/plone/plone.portlet.collection',
       license='GPL',
