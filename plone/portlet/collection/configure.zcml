@@ -9,7 +9,7 @@
     
     <genericsetup:registerProfile
        name="plone.portlet.collection"
-       title="collection portlet"
+       title="Collection portlet"
        directory="profiles/default"
        description="A simple portlet that displays the results of a collection object"
        provides="Products.GenericSetup.interfaces.EXTENSION"
