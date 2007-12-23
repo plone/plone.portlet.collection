@@ -1,6 +1,5 @@
 from zope.interface import implements
 from zope.component import getMultiAdapter
-from zope.component.interface import interfaceToName
 
 from plone.portlets.interfaces import IPortletDataProvider
 from plone.app.portlets.portlets import base
@@ -11,10 +10,8 @@ from zope.formlib import form
 from plone.memoize.instance import memoize
 from plone.memoize import ram
 from plone.memoize.compress import xhtml_compress
-from plone.app.portlets.cache import render_cachekey
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from plone.app.vocabularies.catalog import SearchableTextSource
 from plone.app.vocabularies.catalog import SearchableTextSourceBinder
 from plone.app.form.widgets.uberselectionwidget import UberSelectionWidget
 
@@ -36,8 +33,20 @@ class ICollectionPortlet(IPortletDataProvider):
                                   source=SearchableTextSourceBinder({'object_provides' : IATTopic.__identifier__}))
 
     limit = schema.Int(title=_(u"Limit"),
-                       description=_(u"Specifiy the maximum number of items to show in the portlet"),
+                       description=_(u"Specifiy the maximum number of items to show in the portlet. "
+                                       "Leave this blank to show all items."),
                        required=False)
+                       
+    show_more = schema.Bool(title=_(u"Show more... link"),
+                       description=_(u"If enabled, a more... link will appear in the footer of the portlet, "
+                                      "linking to the underlying Collection."),
+                       required=True,
+                       default=True)
+                       
+    show_dates = schema.Bool(title=_(u"Show dates"),
+                       description=_(u"If enabled, effective dates will be shown underneath the items listed."),
+                       required=True,
+                       default=False)
 
 class Assignment(base.Assignment):
     """
@@ -51,11 +60,15 @@ class Assignment(base.Assignment):
     header = u""
     target_collection=None
     limit = None
+    show_more = True
+    show_dates = False
 
-    def __init__(self, header=u"", target_collection=None, limit=None):
+    def __init__(self, header=u"", target_collection=None, limit=None, show_more=True, show_dates=False):
         self.header = header
         self.target_collection = target_collection
         self.limit = limit
+        self.show_more = show_more
+        self.show_dates = show_dates
 
     @property
     def title(self):
@@ -77,61 +90,58 @@ class Renderer(base.Renderer):
 
     def __init__(self, *args):
         base.Renderer.__init__(self, *args)
-        portal_state = getMultiAdapter((self.context, self.request), name=u'plone_portal_state')
-        self.portal_url = portal_state.portal_url()
-        self.portal = portal_state.portal()
 
-    @ram.cache(render_cachekey)
-    def render(self):
-        if self.available:
-            return xhtml_compress(self._template())
-        else:
-            return ''
+    # Cached version - needs a proper cache key
+    # @ram.cache(render_cachekey)
+    # def render(self):
+    #     if self.available:
+    #         return xhtml_compress(self._template())
+    #     else:
+    #         return ''
+
+    render = _template
 
     @property
     def available(self):
-        return len(self._data())
+        return len(self.results())
 
-    @memoize
-    def getCollection(self):
-        """ get the collection the portlet is pointing to"""
-        collection_path = self.data.target_collection
-
-        # it feels insane that i need to do manual strippping of the first slash in this string.
-        # I must be doing something wrong
-        # please make this bit more sane
-
-        if collection_path is None or len(collection_path)==0:
+    def collection_url(self):
+        collection = self.collection()
+        if collection is None:
             return None
-        # The portal root is never a collection
-
-        if collection_path[0]=='/':
-            collection_path = collection_path[1:]
-        collection = self.portal.restrictedTraverse(collection_path, default=None)
-
-        # we should also check that the returned object implements the interfaces for collection
-        # So that we don't accidentally return folders and stuff that will make things break
-        if IATTopic.providedBy(collection):
-            return collection
         else:
-            return None
+            return collection.absolute_url()
 
     @memoize
-    def _data(self):
+    def results(self):
         """ get the actual result brains from the collection.
             render_cachekey method calls self._data to compute cache key. """
         results = []
-        collection = self.getCollection()
+        collection = self.collection()
         if collection is not None:
             results = collection.queryCatalog()
             if self.data.limit and self.data.limit > 0:
                 results = results[:self.data.limit]
         return results
+        
+    @memoize
+    def collection(self):
+        """ get the collection the portlet is pointing to"""
+        
+        collection_path = self.data.target_collection
+        if not collection_path:
+            return None
 
-    def results(self):
-        """ return data to template """
-        return self._data()
+        if collection_path.startswith('/'):
+            collection_path = collection_path[1:]
+        
+        if not collection_path:
+            return None
 
+        portal_state = getMultiAdapter((self.context, self.request), name=u'plone_portal_state')
+        portal = portal_state.portal()
+        return portal.restrictedTraverse(collection_path, default=None)
+        
 class AddForm(base.AddForm):
     """Portlet add form.
     
