@@ -8,7 +8,7 @@
     <five:registerPackage package="." />
     
     <genericsetup:registerProfile
-       name="plone.portlet.collection"
+       name="default"
        title="Collection portlet"
        directory="profiles/default"
        description="A simple portlet that displays the results of a collection object"
