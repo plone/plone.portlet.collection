@@ -19,7 +19,7 @@ setup(name='plone.portlet.collection',
       url='http://svn.plone.org/svn/plone/plone.portlet.collection',
       license='GPL',
       packages=find_packages(exclude=['ez_setup']),
-      namespace_packages=['plone'],
+      namespace_packages=['plone', "plone.portlet"],
       include_package_data=True,
       zip_safe=False,
       install_requires=[
