@@ -30,7 +30,8 @@ class ICollectionPortlet(IPortletDataProvider):
     target_collection = schema.Choice(title=_(u"Target collection"),
                                   description=_(u"Find the collection which provides the items to list"),
                                   required=True,
-                                  source=SearchableTextSourceBinder({'object_provides' : IATTopic.__identifier__}))
+                                  source=SearchableTextSourceBinder({'object_provides' : IATTopic.__identifier__},
+                                                                    default_query='path:'))
 
     limit = schema.Int(title=_(u"Limit"),
                        description=_(u"Specifiy the maximum number of items to show in the portlet. "
