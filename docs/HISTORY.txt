@@ -1,8 +1,12 @@
 Changelog
 =========
 
-1.1 - Unreleased
+1.0 - Unreleased
 ----------------
+
+
+1.0b1 - March 8, 2008
+---------------------
 
 * Fix a typo in the CSS classes.
   [davisagli]
