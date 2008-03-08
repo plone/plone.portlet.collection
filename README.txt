@@ -1,7 +1,4 @@
-plone.portlet.collection Package Readme
-=========================
-
-Overview
---------
+Introduction
+============
 
 A portlet that fetches results from a collection

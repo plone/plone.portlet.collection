@@ -1,9 +1,34 @@
-Changelog for plone.portlet.collection
+Changelog
+=========
 
-    (name of developer listed in brackets)
+1.1 - Unreleased
+----------------
 
-plone.portlet.collection - 0.1 Unreleased
+* Fix a typo in the CSS classes.
+  [davisagli]
 
-    - Initial package structure.
-      [zopeskel]
+* Set default_query to get something to browse in the UberSelectionWidget from
+  the start.
+  [fschulze]
 
+* Code cleanup and make showing of dates for items and a 'Show more...' link
+  configurable.
+  [optilude]
+
+
+0.1.1 - November 19, 2007
+--------------------------
+
+* Set zip-safe flag for the egg to False so zcml can be correctly loaded.
+  [wichert]
+
+* Remove non-ASCII characters form the description since PyPI can not handle
+  them.
+  [wichert]
+
+
+0.1 - November 19, 2007
+-----------------------
+
+* First public release
+  [baekholt, wichert]
