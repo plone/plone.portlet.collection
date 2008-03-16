@@ -1,5 +1,5 @@
 <dl class="portlet portletCollection"
-    i18n:domain="plone.portlet.collection"
+    i18n:domain="plone"
     tal:define="collection_url view/collection_url;
                 plone_view context/@@plone;
                 toLocalizedTime nocall:plone_view/toLocalizedTime;

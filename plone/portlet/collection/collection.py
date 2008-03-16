@@ -17,7 +17,7 @@ from plone.app.form.widgets.uberselectionwidget import UberSelectionWidget
 
 from Products.ATContentTypes.interface import IATTopic
 
-from plone.portlet.collection import CollectionMessageFactory as _
+from plone.portlet.collection import PloneMessageFactory as _
 
 class ICollectionPortlet(IPortletDataProvider):
     """A portlet which renders the results of a collection object.

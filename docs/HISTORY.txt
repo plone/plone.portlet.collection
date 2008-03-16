@@ -4,6 +4,8 @@ Changelog
 1.0 - Unreleased
 ----------------
 
+* Changed the i18n domain to `plone`.
+  [hannosch]
 
 1.0b1 - March 8, 2008
 ---------------------
