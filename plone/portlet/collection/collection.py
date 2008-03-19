@@ -34,7 +34,7 @@ class ICollectionPortlet(IPortletDataProvider):
                                                                     default_query='path:'))
 
     limit = schema.Int(title=_(u"Limit"),
-                       description=_(u"Specifiy the maximum number of items to show in the portlet. "
+                       description=_(u"Specify the maximum number of items to show in the portlet. "
                                        "Leave this blank to show all items."),
                        required=False)
                        
