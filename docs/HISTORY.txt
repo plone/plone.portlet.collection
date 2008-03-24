@@ -4,6 +4,9 @@ Changelog
 1.0 - Unreleased
 ----------------
 
+* Added missing i18n markup to portlets.xml.
+  [hannosch]
+
 * Changed the i18n domain to `plone`.
   [hannosch]
 
