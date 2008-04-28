@@ -6,13 +6,18 @@
     i18n_domain="plone">
 
     <five:registerPackage package="." />
-    
+
     <genericsetup:registerProfile
        name="default"
        title="Collection portlet"
        directory="profiles/default"
        description="A simple portlet that displays the results of a collection object"
        provides="Products.GenericSetup.interfaces.EXTENSION"
+       />
+
+     <permission
+       id="plone.portlet.collection.AddCollectionPortlet"
+       title="plone.portlet.collection: Add collection portlet"
        />
  
      <!-- Register the portlet -->
@@ -21,7 +26,7 @@
          interface=".collection.ICollectionPortlet"
          assignment=".collection.Assignment"
          view_permission="zope2.View"
-         edit_permission="cmf.ManagePortal"
+         edit_permission="plone.portlet.collection.AddCollectionPortlet"
          renderer=".collection.Renderer"
          addview=".collection.AddForm"
          editview=".collection.EditForm"

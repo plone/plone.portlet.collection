@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.1.1 - Unreleased
+------------------
+
+* Use a custom edit permission for the portlet.
+  [hannosch]
+
 1.1.0 - April 20th 2008
 -----------------------
 
