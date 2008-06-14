@@ -114,7 +114,7 @@ class TestCollectionQuery(TestCase):
         return getMultiAdapter((context, request, view, manager, assignment), IPortletRenderer)
 
     def testSimpleQuery(self):
-        # set up our collection to searh for Folders
+        # set up our collection to search for Folders
         crit = self.folder.collection.addCriterion('portal_type', 'ATSimpleStringCriterion')
         crit.setValue('Folder')
 
@@ -135,7 +135,63 @@ class TestCollectionQuery(TestCase):
 
         # we want the portlet to return us the same results as the collection
         self.assertEquals(collection_num_items, len(collectionrenderer.results()))
+        
+    def testRandomQuery(self):
+        # we're being perhaps a bit too clever in random mode with the internals of the
+        # LazyMap returned by the collection query, so let's try a bunch of scenarios
+        # to make sure they work
+        
+        # set up our portlet renderer
+        mapping = PortletAssignmentMapping()
+        request = self.folder.REQUEST
+        mapping['foo'] = collection.Assignment(header=u"title",
+                                               random=True,
+                                               target_collection='/Members/test_user_1_/collection')
+        collectionrenderer = self.renderer(context=None, request=None, view=None, manager=None, assignment=mapping['foo'])
 
+        # add some folders
+        for i in range(6):
+            self.folder.invokeFactory('Folder', 'folder_%s'%i)
+            getattr(self.folder, 'folder_%s'%i).reindexObject()
+
+        # collection with no criteria -- should return empty list, without error
+        self.assertEqual(len(collectionrenderer.results()), 0)
+
+        # let's make sure the results aren't being memoized
+        old_func = self.folder.collection.queryCatalog
+        global collection_was_called
+        collection_was_called = False
+        def mark_collection_called(**kw):
+            global collection_was_called
+            collection_was_called = True
+        self.folder.collection.queryCatalog = mark_collection_called
+        collectionrenderer.results()
+        self.folder.collection.queryCatalog = old_func
+        self.failUnless(collection_was_called)
+        
+        # collection with simple criterion -- should return 1 (random) folder
+        crit = self.folder.collection.addCriterion('portal_type', 'ATSimpleStringCriterion')
+        crit.setValue('Folder')
+        self.assertEqual(len(collectionrenderer.results()), 1)
+        
+        # collection with multiple criteria -- should behave similarly
+        crit = self.folder.collection.addCriterion('Creator', 'ATSimpleStringCriterion')
+        crit.setValue('test_user_1_')
+        collectionrenderer.results()
+        
+        # collection with sorting -- should behave similarly (sort is ignored internally)
+        self.folder.collection.setSortCriterion('modified', False)
+        self.assertEqual(len(collectionrenderer.results()), 1)
+        
+        # same criteria, now with limit set to 2 -- should return 2 (random) folders
+        collectionrenderer.data.limit = 2
+        self.assertEqual(len(collectionrenderer.results()), 2)
+        
+        # make sure there's no error if the limit is greater than the # of results found
+        collectionrenderer.data.limit = 10
+        self.failUnless(len(collectionrenderer.results()) >= 6)
+        
+        
 def test_suite():
     from unittest import TestSuite, makeSuite
     suite = TestSuite()
