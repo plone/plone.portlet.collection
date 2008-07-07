@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.1.3 (unreleased)
-------------------
+1.1.3 July 7th, 2008
+--------------------
 
 * Added 'Select random items' option.
   [davisagli]
