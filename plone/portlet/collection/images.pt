@@ -1,4 +1,4 @@
-<dl class="portlet portletCollection"
+<dl class="portlet portletImages"
     i18n:domain="plone"
     tal:define="collection_url view/collection_url">
 
