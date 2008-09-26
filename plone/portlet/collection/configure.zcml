@@ -20,6 +20,11 @@
        title="plone.portlet.collection: Add collection portlet"
        />
  
+     <permission
+       id="plone.portlet.collection.AddImagesPortlet"
+       title="plone.portlet.collection: Add images portlet"
+       />
+ 
      <!-- Register the portlet -->
      <plone:portlet
          name="plone.portlet.collection.Collection"
@@ -30,5 +35,16 @@
          renderer=".collection.Renderer"
          addview=".collection.AddForm"
          editview=".collection.EditForm"
+         />
+     
+     <plone:portlet
+         name="plone.portlet.collection.Images"
+         interface=".images.IImagesPortlet"
+         assignment=".images.Assignment"
+         view_permission="zope2.View"
+         edit_permission="plone.portlet.collection.AddImagesPortlet"
+         renderer=".images.Renderer"
+         addview=".images.AddForm"
+         editview=".images.EditForm"
          />
 </configure>

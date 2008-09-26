@@ -13,4 +13,12 @@
                     description description_collection_portlet"
    />
  
+ <portlet
+   addview="plone.portlet.collection.Images"
+   title="Images portlet"
+   description="A portlet which displays the images among the results of a collection query"
+   i18n:attributes="title title_images_portlet;
+                    description description_images_portlet"
+   />
+ 
 </portlets>

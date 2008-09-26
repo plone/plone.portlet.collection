@@ -1,0 +1,39 @@
+<dl class="portlet portletCollection"
+    i18n:domain="plone"
+    tal:define="collection_url view/collection_url">
+
+    <dt class="portletHeader">
+        <span class="portletTopLeft"></span>
+        <a tal:attributes="href collection_url" tal:omit-tag="not:view/data/show_more">
+            <span tal:content="view/data/header" />
+        </a>
+        <span class="portletTopRight"></span>
+    </dt>
+    
+    <tal:events tal:repeat="obj view/results">
+    <dd class="portletItem"
+        tal:define="oddrow repeat/obj/odd"
+        tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
+        <a href="#"
+           class="tile"
+           tal:attributes="href obj/getURL;
+                           title obj/Description">
+            <img tal:attributes="title obj/pretty_title_or_id;
+                                 alt obj/pretty_title_or_id;
+                                 src python:view.getURLWithFormat(obj.getURL());
+                                 width view/data/width" />
+        </a>
+    </dd>
+    </tal:events>
+    
+    <dd class="portletFooter" tal:condition="view/data/show_more">
+        <span class="portletBottomLeft"></span>
+        <span>
+        <a tal:attributes="href collection_url" i18n:translate="more_url">
+             More&hellip;
+             </a>
+        </span>
+        <span class="portletBottomRight"></span>
+    </dd>
+
+</dl>
