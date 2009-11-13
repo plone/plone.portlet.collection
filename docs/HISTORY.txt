@@ -4,6 +4,10 @@ Changelog
 1.1.4 - unreleased
 ------------------
 
+* add fix for http://dev.plone.org/plone/ticket/9198 so that 
+  typeUseViewActionInListings is respected
+  [aaronv]
+
 * Removed msgids in portlets.xml. There is no support for
   msgids in the import of portlets.xml implementation.
   This allows to extract translatable strings with i18ndude.
