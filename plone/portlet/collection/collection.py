@@ -10,8 +10,6 @@ from zope import schema
 from zope.formlib import form
 
 from plone.memoize.instance import memoize
-from plone.memoize import ram
-from plone.memoize.compress import xhtml_compress
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.app.vocabularies.catalog import SearchableTextSourceBinder
@@ -189,6 +187,9 @@ class Renderer(base.Renderer):
 
         portal_state = getMultiAdapter((self.context, self.request), name=u'plone_portal_state')
         portal = portal_state.portal()
+        if isinstance(collection_path,unicode):
+            #restrictedTraverse accept only strings
+            collection_path = str(collection_path)
         return portal.restrictedTraverse(collection_path, default=None)
         
 class AddForm(base.AddForm):

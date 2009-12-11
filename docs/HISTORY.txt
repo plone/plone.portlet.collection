@@ -13,6 +13,10 @@ Changelog
   This allows to extract translatable strings with i18ndude.
   [vincentfretin]
 
+* add fix for http://dev.plone.org/plone/ticket/9184 so that
+  restrictedTraverse gets always string not unicode
+  [amleczko]
+
 1.1.3 - July 7th, 2008
 --------------------
 
