@@ -86,6 +86,17 @@ class TestRenderer(TestCase):
         #self.failUnless('title' in output)
         #self.failUnless('<b>text</b>' in output)
 
+
+    def test_collection_path_unicode(self):
+        """
+        Cover problem in #9184
+        """
+        r = self.renderer(context=self.portal,
+                          assignment=collection.Assignment(header=u"title",
+                                                           target_collection=u"/events"))
+        r  = r.__of__(self.folder)
+        self.assertEqual(r.collection().id, 'events')
+
 class TestCollectionQuery(TestCase):
 
     def afterSetUp(self):

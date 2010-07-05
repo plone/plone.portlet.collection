@@ -9,8 +9,8 @@
    addview="plone.portlet.collection.Collection"
    title="Collection portlet"
    description="A portlet which displays the results of a collection query"
-   i18n:attributes="title title_collection_portlet;
-                    description description_collection_portlet"
+   i18n:attributes="title;
+                    description"
    />
  
  <portlet
