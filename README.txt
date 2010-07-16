@@ -1,4 +1,4 @@
 Introduction
 ============
 
-A portlet that fetches results from a collection
+A portlet that fetches results from a collection.

@@ -1,23 +1,25 @@
 from setuptools import setup, find_packages
-import os
 
-version = '1.1.4'
+version = '2.0'
 
 setup(name='plone.portlet.collection',
       version=version,
       description="A portlet that fetches results from a collection",
       long_description=open("README.txt").read() + "\n" +
-                       open(os.path.join("docs", "HISTORY.txt")).read(),
+                       open("CHANGES.txt").read(),
       classifiers=[
-        "Framework :: Plone",
-        "Programming Language :: Python",
-        "Topic :: Software Development :: Libraries :: Python Modules",
+          "Environment :: Web Environment",
+          "Framework :: Plone",
+          "Framework :: Zope2",
+          "License :: OSI Approved :: GNU General Public License (GPL)",
+          "Operating System :: OS Independent",
+          "Programming Language :: Python",
         ],
       keywords='',
-      author='Geir Baekholt - Jarn',
-      author_email='baekholt@jarn.com',
-      url='http://svn.plone.org/svn/plone/plone.portlet.collection',
-      license='GPL',
+      author='Plone Foundation',
+      author_email='plone-developers@lists.sourceforge.net',
+      url='http://pypi.python.org/pypi/plone.portlet.collection',
+      license='GPL version 2',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['plone', "plone.portlet"],
       include_package_data=True,
@@ -30,7 +32,4 @@ setup(name='plone.portlet.collection',
           'plone.app.vocabularies',
           'plone.app.form',
       ],
-      entry_points="""
-      # -*- Entry points: -*-
-      """,
       )
