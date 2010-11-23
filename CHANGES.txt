@@ -4,6 +4,11 @@ Changelog
 2.0.1 - unreleased
 ------------------
 
+* Fixed returning optional randomized results in the collection
+  portlet.  This happened on Plone 4; if this makes the portlet too
+  slow for you, you should switch off the randomizing.
+  [maurits]
+
 * Fixed wrong exception handling in random collection portlet that
   failed to catch an IndexError.
   [maurits]
