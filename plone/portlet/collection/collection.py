@@ -19,41 +19,52 @@ from Products.ATContentTypes.interface import IATTopic
 
 from plone.portlet.collection import PloneMessageFactory as _
 
+
 class ICollectionPortlet(IPortletDataProvider):
     """A portlet which renders the results of a collection object.
     """
 
-    header = schema.TextLine(title=_(u"Portlet header"),
-                             description=_(u"Title of the rendered portlet"),
-                             required=True)
+    header = schema.TextLine(
+        title=_(u"Portlet header"),
+        description=_(u"Title of the rendered portlet"),
+        required=True)
 
-    target_collection = schema.Choice(title=_(u"Target collection"),
-                                  description=_(u"Find the collection which provides the items to list"),
-                                  required=True,
-                                  source=SearchableTextSourceBinder({'object_provides' : IATTopic.__identifier__},
-                                                                    default_query='path:'))
+    target_collection = schema.Choice(
+        title=_(u"Target collection"),
+        description=_(u"Find the collection which provides the items to list"),
+        required=True,
+        source=SearchableTextSourceBinder(
+            {'object_provides': IATTopic.__identifier__},
+            default_query='path:'))
 
-    limit = schema.Int(title=_(u"Limit"),
-                       description=_(u"Specify the maximum number of items to show in the portlet. "
-                                       "Leave this blank to show all items."),
-                       required=False)
+    limit = schema.Int(
+        title=_(u"Limit"),
+        description=_(u"Specify the maximum number of items to show in the "
+                      u"portlet. Leave this blank to show all items."),
+        required=False)
 
-    random = schema.Bool(title=_(u"Select random items"),
-                         description=_(u"If enabled, items will be selected randomly from the collection, "
-                                        "rather than based on its sort order."),
-                         required=True,
-                         default=False)
+    random = schema.Bool(
+        title=_(u"Select random items"),
+        description=_(u"If enabled, items will be selected randomly from the "
+                      u"collection, rather than based on its sort order."),
+        required=True,
+        default=False)
 
-    show_more = schema.Bool(title=_(u"Show more... link"),
-                       description=_(u"If enabled, a more... link will appear in the footer of the portlet, "
-                                      "linking to the underlying Collection."),
-                       required=True,
-                       default=True)
+    show_more = schema.Bool(
+        title=_(u"Show more... link"),
+        description=_(u"If enabled, a more... link will appear in the footer "
+                      u"of the portlet, linking to the underlying "
+                      u"Collection."),
+        required=True,
+        default=True)
 
-    show_dates = schema.Bool(title=_(u"Show dates"),
-                       description=_(u"If enabled, effective dates will be shown underneath the items listed."),
-                       required=True,
-                       default=False)
+    show_dates = schema.Bool(
+        title=_(u"Show dates"),
+        description=_(u"If enabled, effective dates will be shown underneath "
+                      u"the items listed."),
+        required=True,
+        default=False)
+
 
 class Assignment(base.Assignment):
     """
@@ -65,13 +76,14 @@ class Assignment(base.Assignment):
     implements(ICollectionPortlet)
 
     header = u""
-    target_collection=None
+    target_collection = None
     limit = None
     random = False
     show_more = True
     show_dates = False
 
-    def __init__(self, header=u"", target_collection=None, limit=None, random=False, show_more=True, show_dates=False):
+    def __init__(self, header=u"", target_collection=None, limit=None,
+                 random=False, show_more=True, show_dates=False):
         self.header = header
         self.target_collection = target_collection
         self.limit = limit
@@ -148,17 +160,20 @@ class Renderer(base.Renderer):
             """
             Kids, do not try this at home.
 
-            We're poking at the internals of the (lazy) catalog results to avoid
-            instantiating catalog brains unnecessarily.
+            We're poking at the internals of the (lazy) catalog
+            results to avoid instantiating catalog brains
+            unnecessarily.
 
-            We're expecting a LazyCat wrapping two LazyMaps as the return value from
-            Products.ATContentTypes.content.topic.ATTopic.queryCatalog.  The second
-            of these contains the results of the catalog query.  We force sorting
-            off because it's unnecessary and might result in a different structure of
-            lazy objects.
+            We're expecting a LazyCat wrapping two LazyMaps as the
+            return value from
+            Products.ATContentTypes.content.topic.ATTopic.queryCatalog.
+            The second of these contains the results of the catalog
+            query.  We force sorting off because it's unnecessary and
+            might result in a different structure of lazy objects.
 
-            Using the correct LazyMap (results._seq[1]), we randomly pick a catalog index
-            and then retrieve it as a catalog brain using the _func method.
+            Using the correct LazyMap (results._seq[1]), we randomly
+            pick a catalog index and then retrieve it as a catalog
+            brain using the _func method.
             """
 
             results = collection.queryCatalog(sort_on=None)
@@ -166,7 +181,8 @@ class Renderer(base.Renderer):
                 return []
             limit = self.data.limit and min(len(results), self.data.limit) or 1
             try:
-                results = [results._seq[1]._func(i) for i in random.sample(results._seq[1]._seq, limit)]
+                results = [results._seq[1]._func(i)
+                           for i in random.sample(results._seq[1]._seq, limit)]
             except (AttributeError, IndexError):
                 # This handles the cases where the lazy objects
                 # returned by the catalog are structured differently
@@ -192,12 +208,14 @@ class Renderer(base.Renderer):
         if not collection_path:
             return None
 
-        portal_state = getMultiAdapter((self.context, self.request), name=u'plone_portal_state')
+        portal_state = getMultiAdapter((self.context, self.request),
+                                       name=u'plone_portal_state')
         portal = portal_state.portal()
-        if isinstance(collection_path,unicode):
+        if isinstance(collection_path, unicode):
             #restrictedTraverse accept only strings
             collection_path = str(collection_path)
         return portal.restrictedTraverse(collection_path, default=None)
+
 
 class AddForm(base.AddForm):
     """Portlet add form.
@@ -210,10 +228,12 @@ class AddForm(base.AddForm):
     form_fields['target_collection'].custom_widget = UberSelectionWidget
 
     label = _(u"Add Collection Portlet")
-    description = _(u"This portlet display a listing of items from a Collection.")
+    description = _(u"This portlet display a listing of items from a "
+                    u"Collection.")
 
     def create(self, data):
         return Assignment(**data)
+
 
 class EditForm(base.EditForm):
     """Portlet edit form.
@@ -226,4 +246,5 @@ class EditForm(base.EditForm):
     form_fields['target_collection'].custom_widget = UberSelectionWidget
 
     label = _(u"Edit Collection Portlet")
-    description = _(u"This portlet display a listing of items from a Collection.")
+    description = _(u"This portlet display a listing of items from a "
+                    u"Collection.")
