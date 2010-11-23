@@ -19,7 +19,7 @@
        id="plone.portlet.collection.AddCollectionPortlet"
        title="plone.portlet.collection: Add collection portlet"
        />
- 
+
      <!-- Register the portlet -->
      <plone:portlet
          name="plone.portlet.collection.Collection"
