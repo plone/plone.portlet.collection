@@ -4,6 +4,9 @@ Changelog
 2.0.1 - unreleased
 ------------------
 
+* Fixed wrong exception handling in random collection portlet that
+  failed to catch an IndexError.
+  [maurits]
 
 2.0 - 2010-07-18
 ----------------

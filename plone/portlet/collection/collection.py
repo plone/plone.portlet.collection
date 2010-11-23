@@ -165,7 +165,7 @@ class Renderer(base.Renderer):
             limit = self.data.limit and min(len(results), self.data.limit) or 1
             try:
                 results = [results._seq[1]._func(i) for i in random.sample(results._seq[1]._seq, limit)]
-            except AttributeError, IndexError:
+            except (AttributeError, IndexError):
                 # This handles the cases where the lazy objects returned by the catalog
                 # are structured differently than expected.
                 results = []
