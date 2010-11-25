@@ -180,18 +180,11 @@ class Renderer(base.Renderer):
             if results is None:
                 return []
             limit = self.data.limit and min(len(results), self.data.limit) or 1
-            try:
-                results = [results._seq[1]._func(i)
-                           for i in random.sample(results._seq[1]._seq, limit)]
-            except (AttributeError, IndexError):
-                # This handles the cases where the lazy objects
-                # returned by the catalog are structured differently
-                # than expected.  This happens on Plone 4.  This may
-                # make the portlet slow.  If it does, you should not
-                # use the randomizer, sorry.
-                if len(results) < limit:
-                    return results
-                results = random.sample(results, limit)
+
+            if len(results) < limit:
+                limit = len(results)
+            results = random.sample(results, limit)
+
         return results
 
     @memoize
