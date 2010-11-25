@@ -4,6 +4,9 @@ Changelog
 2.0.1 - unreleased
 ------------------
 
+* Removed bug where a resultset with fewer items than limit wasn't randomized.
+  [jaroel]
+
 * Removed Plone 3 specific implementation in favor of a generic one.
   [jaroel]
 
