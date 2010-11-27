@@ -4,6 +4,11 @@ Changelog
 2.0.1 - unreleased
 ------------------
 
+* Add Site Administrator to the default roles for the
+  "plone.portlet.collection: Add collection portlet" permission, for forward
+  compatibility with Plone 4.1.
+  [davisagli]
+
 * Removed bug where a resultset with fewer items than limit wasn't randomized.
   [jaroel]
 
