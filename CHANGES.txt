@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0.1 - unreleased
+2.0.1 - 2011-01-03
 ------------------
 
 * Add Site Administrator to the default roles for the
