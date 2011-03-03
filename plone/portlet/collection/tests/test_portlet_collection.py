@@ -99,7 +99,7 @@ class TestRenderer(TestCase):
         
     def test_css_class(self):
         r = self.renderer(context=self.portal,
-                          assignment=static.Assignment(header=u"Welcome text", text="<b>text</b>"))
+                          assignment=collection.Assignment(header=u"Welcome text"))
         self.assertEquals('portlet-collection-welcome-text', r.css_class())
      
 
