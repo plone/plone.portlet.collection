@@ -4,6 +4,10 @@ Changelog
 2.0.2 - Unreleased
 ------------------
 
+* Added a dynamic dl class, generated from portlet's title. Code taken from
+  plone.portlet.static.
+  [zupo]
+
 2.0.1 - 2011-01-03
 ------------------
 

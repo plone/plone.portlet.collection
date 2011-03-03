@@ -96,6 +96,12 @@ class TestRenderer(TestCase):
                                                            target_collection=u"/events"))
         r  = r.__of__(self.folder)
         self.assertEqual(r.collection().id, 'events')
+        
+    def test_css_class(self):
+        r = self.renderer(context=self.portal,
+                          assignment=static.Assignment(header=u"Welcome text", text="<b>text</b>"))
+        self.assertEquals('portlet-collection-welcome-text', r.css_class())
+     
 
 class TestCollectionQuery(TestCase):
 

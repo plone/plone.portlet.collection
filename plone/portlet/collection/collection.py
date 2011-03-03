@@ -1,7 +1,7 @@
 import random
 
 from zope.interface import implements
-from zope.component import getMultiAdapter
+from zope.component import getMultiAdapter, getUtility
 
 from plone.portlets.interfaces import IPortletDataProvider
 from plone.app.portlets.portlets import base
@@ -14,6 +14,8 @@ from plone.memoize.instance import memoize
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.app.vocabularies.catalog import SearchableTextSourceBinder
 from plone.app.form.widgets.uberselectionwidget import UberSelectionWidget
+
+from plone.i18n.normalizer.interfaces import IIDNormalizer
 
 from Products.ATContentTypes.interface import IATTopic
 
@@ -132,6 +134,13 @@ class Renderer(base.Renderer):
             return None
         else:
             return collection.absolute_url()
+
+    def css_class(self):
+        """Generate a CSS class from the portlet header
+        """
+        header = self.data.header
+        normalizer = getUtility(IIDNormalizer)
+        return "portlet-collection-%s" % normalizer.normalize(header)
 
     def results(self):
         """ Get the actual result brains from the collection.
