@@ -80,12 +80,7 @@ class TestRenderer(TestCase):
         r = r.__of__(self.folder)
         r.update()
         output = r.render()
-
-        # this test failed due to changed behavior. We'll not output anything if the portlet does not point to a collection
-
-        #self.failUnless('title' in output)
-        #self.failUnless('<b>text</b>' in output)
-
+        self.assertTrue('title' in output)
 
     def test_collection_path_unicode(self):
         """
