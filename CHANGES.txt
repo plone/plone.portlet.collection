@@ -1,9 +1,12 @@
 Changelog
 =========
 
-
 2.0.2 - Unreleased
 ------------------
+
+- Pass on `limit` setting from the portlet to the `queryCatalog` call, to take
+  advantage of optimizations inside the catalog.
+  [hannosch]
 
 - Add MANIFEST.in.
   [WouterVH]

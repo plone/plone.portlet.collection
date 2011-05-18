@@ -139,9 +139,14 @@ class Renderer(base.Renderer):
         results = []
         collection = self.collection()
         if collection is not None:
-            results = collection.queryCatalog()
-            if self.data.limit and self.data.limit > 0:
-                results = results[:self.data.limit]
+            limit = self.data.limit
+            if limit and limit > 0:
+                # pass on batching hints to the catalog
+                results = collection.queryCatalog(batch=True, b_size=limit)
+            else:
+                results = collection.queryCatalog()
+            if limit and limit > 0:
+                results = results[:limit]
         return results
 
     def _random_results(self):
