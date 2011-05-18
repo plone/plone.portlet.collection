@@ -1,8 +1,13 @@
 Changelog
 =========
 
-2.0.2 - Unreleased
+2.0.2 - unreleased
 ------------------
+
+- Fix memoization of results when randomizing. We only memoize on the instance,
+  in this case the rendered object, which is created per request and per
+  portlet.
+  [hannosch]
 
 - Pass on `limit` setting from the portlet to the `queryCatalog` call, to take
   advantage of optimizations inside the catalog.

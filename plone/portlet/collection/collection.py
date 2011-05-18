@@ -125,16 +125,13 @@ class Renderer(base.Renderer):
         normalizer = getUtility(IIDNormalizer)
         return "portlet-collection-%s" % normalizer.normalize(header)
 
+    @memoize
     def results(self):
-        """ Get the actual result brains from the collection.
-            This is a wrapper so that we can memoize if and only if we aren't
-            selecting random items."""
         if self.data.random:
             return self._random_results()
         else:
             return self._standard_results()
 
-    @memoize
     def _standard_results(self):
         results = []
         collection = self.collection()
