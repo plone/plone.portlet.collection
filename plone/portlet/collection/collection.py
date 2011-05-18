@@ -143,6 +143,7 @@ class Renderer(base.Renderer):
             if limit and limit > 0:
                 # pass on batching hints to the catalog
                 results = collection.queryCatalog(batch=True, b_size=limit)
+                results = results._sequence
             else:
                 results = collection.queryCatalog()
             if limit and limit > 0:
