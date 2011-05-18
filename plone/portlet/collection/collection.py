@@ -102,27 +102,12 @@ class Assignment(base.Assignment):
 
 
 class Renderer(base.Renderer):
-    """Portlet renderer.
-
-    This is registered in configure.zcml. The referenced page template is
-    rendered, and the implicit variable 'view' will refer to an instance
-    of this class. Other methods can be added and referenced in the template.
-    """
 
     _template = ViewPageTemplateFile('collection.pt')
+    render = _template
 
     def __init__(self, *args):
         base.Renderer.__init__(self, *args)
-
-    # Cached version - needs a proper cache key
-    # @ram.cache(render_cachekey)
-    # def render(self):
-    #     if self.available:
-    #         return xhtml_compress(self._template())
-    #     else:
-    #         return ''
-
-    render = _template
 
     @property
     def available(self):
@@ -136,8 +121,6 @@ class Renderer(base.Renderer):
             return collection.absolute_url()
 
     def css_class(self):
-        """Generate a CSS class from the portlet header
-        """
         header = self.data.header
         normalizer = getUtility(IIDNormalizer)
         return "portlet-collection-%s" % normalizer.normalize(header)
@@ -161,30 +144,11 @@ class Renderer(base.Renderer):
                 results = results[:self.data.limit]
         return results
 
-    # intentionally non-memoized
     def _random_results(self):
+        # intentionally non-memoized
         results = []
         collection = self.collection()
         if collection is not None:
-            """
-            Kids, do not try this at home.
-
-            We're poking at the internals of the (lazy) catalog
-            results to avoid instantiating catalog brains
-            unnecessarily.
-
-            We're expecting a LazyCat wrapping two LazyMaps as the
-            return value from
-            Products.ATContentTypes.content.topic.ATTopic.queryCatalog.
-            The second of these contains the results of the catalog
-            query.  We force sorting off because it's unnecessary and
-            might result in a different structure of lazy objects.
-
-            Using the correct LazyMap (results._seq[1]), we randomly
-            pick a catalog index and then retrieve it as a catalog
-            brain using the _func method.
-            """
-
             results = collection.queryCatalog(sort_on=None)
             if results is None:
                 return []
@@ -198,8 +162,6 @@ class Renderer(base.Renderer):
 
     @memoize
     def collection(self):
-        """ get the collection the portlet is pointing to"""
-
         collection_path = self.data.target_collection
         if not collection_path:
             return None
@@ -214,18 +176,13 @@ class Renderer(base.Renderer):
                                        name=u'plone_portal_state')
         portal = portal_state.portal()
         if isinstance(collection_path, unicode):
-            #restrictedTraverse accept only strings
+            # restrictedTraverse accepts only strings
             collection_path = str(collection_path)
         return portal.restrictedTraverse(collection_path, default=None)
 
 
 class AddForm(base.AddForm):
-    """Portlet add form.
 
-    This is registered in configure.zcml. The form_fields variable tells
-    zope.formlib which fields to display. The create() method actually
-    constructs the assignment that is being added.
-    """
     form_fields = form.Fields(ICollectionPortlet)
     form_fields['target_collection'].custom_widget = UberSelectionWidget
 
@@ -238,11 +195,6 @@ class AddForm(base.AddForm):
 
 
 class EditForm(base.EditForm):
-    """Portlet edit form.
-
-    This is registered with configure.zcml. The form_fields variable tells
-    zope.formlib which fields to display.
-    """
 
     form_fields = form.Fields(ICollectionPortlet)
     form_fields['target_collection'].custom_widget = UberSelectionWidget
