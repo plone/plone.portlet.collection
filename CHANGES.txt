@@ -11,7 +11,6 @@ Changelog
 - Add metadata.xml to profile.
   [WouterVH]
 
-
 - Added a dynamic dl class, generated from portlet's title. Code taken from
   plone.portlet.static.
   [zupo]
