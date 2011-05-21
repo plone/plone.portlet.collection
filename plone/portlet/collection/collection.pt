@@ -18,8 +18,8 @@
     <tal:events tal:repeat="obj view/results">
     <dd class="portletItem"
         tal:define="oddrow repeat/obj/odd;
-			              useView    python:obj.portal_type in viewActions;
-				            itemUrl    python:useView and obj.getURL() + '/view' or obj.getURL();
+                    useView    python:obj.portal_type in viewActions;
+                    itemUrl    python:useView and obj.getURL() + '/view' or obj.getURL();
                     item_icon python:getIcon(obj);"
 
         tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
