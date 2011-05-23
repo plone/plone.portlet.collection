@@ -1,0 +1,141 @@
+====================
+A functional doctest
+====================
+
+This is a full-blown functional test. The emphasis here is on testing what
+the user may input and see, and the system is largely tested as a black box.
+We use PloneTestCase to set up this test as well, so we have a full Plone site
+to play with. We *can* inspect the state of the portal, e.g. using 
+self.portal and self.folder, but it is often frowned upon since you are not
+treating the system as a black box. Also, if you, for example, log in or set
+roles using calls like self.setRoles(), these are not reflected in the test
+browser, which runs as a separate session.
+
+Being a doctest, we can tell a story here. 
+
+First, we must perform some setup. We use the testbrowser that is shipped
+with Five, as this provides proper Zope 2 integration. Most of the
+documentation, though, is in the underlying zope.testbrower package.
+
+    >>> from Products.Five.testbrowser import Browser
+    >>> b = Browser()
+    >>> portal_url = self.portal.absolute_url()
+
+The following is useful when writing and debugging testbrowser tests. It lets
+us see all error messages in the error_log.
+
+    >>> self.portal.error_log._ignored_exceptions = ()
+
+With that in place we can go to the portal front page and log in. We will
+do this using the default user from PloneTestCase:
+
+    >>> from Products.PloneTestCase.setup import portal_owner, default_password
+
+    >>> b.open(portal_url)
+
+We have the login portlet, so let's use that.
+
+    >>> b.getControl(name='__ac_name').value = portal_owner
+    >>> b.getControl(name='__ac_password').value = default_password
+    >>> b.getControl(name='submit').click()
+
+Here we set the value of the fields on the login form and then simulate a
+submit click.
+
+We then test that we are still on the portal front page
+and we ensure that we get the friendly logged-in message:
+
+    >>> b.url == portal_url
+    True
+    >>> "You are now logged in" in b.contents
+    True
+
+To learn more, look at the zope.testbrowser documentation and interfaces.
+There are also a few examples of testbrowser tests in Plone itself.
+
+Now that we're logged in, create a collection for testing purposes.
+
+    >>> b.getLink(url=portal_url + "/folder_factories").click()
+    >>> b.getControl(label="Collection").selected = True
+    >>> b.getControl(name="form.button.Add").click()
+    >>> b.getControl(name="title").value = "Test Collection"
+    >>> b.getControl(name="form.button.save").click()
+    >>> b.url == portal_url + "/test-collection/"
+    True
+
+Just make it a collection of everything.
+
+    >>> b.getLink(text="Criteria").click()
+    >>> b.getControl(label="Field name").getControl(value="Type").click()
+    >>> select_types = b.getControl(label="Criteria type")
+    >>> select_types.getControl(value="ATPortalTypeCriterion").click()
+    >>> b.getControl(name="form.button.AddCriterion", index=0).click()
+    >>> select_crit = b.getControl(name="crit__Type_ATPortalTypeCriterion_value:list")
+    >>> for c in select_crit.controls: c.selected = True
+    >>> b.getForm(action="criterion_edit_form", index=0).submit()
+
+Now go back to the front page and click the "manage portlets" link.
+
+    >>> b.open(portal_url)
+    >>> b.getLink(text="Manage portlets").click()
+    >>> b.url == portal_url + '/@@manage-portlets'
+    True
+
+Use the 'Add portlet' select box to add a collection portlet.
+
+    >>> leftcolumn_form = b.getForm(action=portal_url, index=1)
+    >>> add_portlet_select = leftcolumn_form.getControl(name=":action", index=0)
+    >>> val = "/++contextportlets++plone.leftcolumn/+/plone.portlet.collection.Collection"
+    >>> add_portlet_select.getControl(value=val).selected = True
+    >>> leftcolumn_form.submit()
+    >>> '<h1 class="documentFirstHeading">Add Collection Portlet</h1>' in b.contents
+    True
+
+Use your new collection for testing. It should already be available at the root
+of the site. Show only two items to make the test sanely terse.
+
+    >>> b.getControl(name="form.target_collection").getControl(value="/test-collection").selected = True
+    >>> b.getControl(name="form.target_collection.update").click()
+    >>> b.getControl(name="form.header").value = "Test Collection"
+    >>> b.getControl(label="Limit").value = "2"
+    >>> b.getControl(name="form.actions.save").click()
+    >>> b.url == portal_url + "/@@manage-portlets"
+    True
+
+Go to the home page and see if it looks OK.
+
+    >>> b.open(portal_url)
+    >>> print b.contents
+    <!DOCTYPE html PUBLIC...
+    <td id="portal-column-one">
+    <div class="visualPadding">
+    <div id="portletwrapper-..."
+    class="portletWrapper kssattr-portlethash-..."><dl class="portlet portletCollection portlet-collection-test-collection">
+    <dt class="portletHeader">
+    <span class="portletTopLeft"></span>
+    <a href="http://nohost/plone/test-collection">
+    <span>Test Collection</span>
+    </a>
+    <span class="portletTopRight"></span>
+    </dt>
+    <dd class="portletItem odd">...</dd>
+    <dd class="portletItem even">...</dd>
+    <dd class="portletFooter">
+    <span class="portletBottomLeft"></span>
+    <span>
+    <a href="http://nohost/plone/test-collection">
+    More&hellip;
+    </a>
+    </span>
+    <span class="portletBottomRight"></span>
+    </dd>
+    </dl>
+    </div>
+    <div class="managePortletsLink">
+    <a title="View portlet management screen"
+    href="http://nohost/plone/@@manage-portlets">Manage portlets</a>
+    </div>
+    &nbsp;
+    </div>
+    </td>
+    ...
