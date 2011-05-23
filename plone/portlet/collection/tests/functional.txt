@@ -31,7 +31,7 @@ do this using the default user from PloneTestCase:
 
     >>> from Products.PloneTestCase.setup import portal_owner, default_password
 
-    >>> b.open(portal_url)
+    >>> b.open(portal_url + "/login_form")
 
 We have the login portlet, so let's use that.
 
@@ -42,19 +42,17 @@ We have the login portlet, so let's use that.
 Here we set the value of the fields on the login form and then simulate a
 submit click.
 
-We then test that we are still on the portal front page
+We then test that we are still on the same page
 and we ensure that we get the friendly logged-in message:
 
-    >>> b.url == portal_url
+    >>> b.url == portal_url + "/login_form"
     True
     >>> "You are now logged in" in b.contents
     True
 
-To learn more, look at the zope.testbrowser documentation and interfaces.
-There are also a few examples of testbrowser tests in Plone itself.
-
 Now that we're logged in, create a collection for testing purposes.
 
+    >>> b.open(portal_url)
     >>> b.getLink(url=portal_url + "/folder_factories").click()
     >>> b.getControl(label="Collection").selected = True
     >>> b.getControl(name="form.button.Add").click()
@@ -74,12 +72,9 @@ Just make it a collection of everything.
     >>> for c in select_crit.controls: c.selected = True
     >>> b.getForm(action="criterion_edit_form", index=0).submit()
 
-Now go back to the front page and click the "manage portlets" link.
+Now open the portlet manager for the site.
 
-    >>> b.open(portal_url)
-    >>> b.getLink(text="Manage portlets").click()
-    >>> b.url == portal_url + '/@@manage-portlets'
-    True
+    >>> b.open(portal_url + '/@@manage-portlets')
 
 Use the 'Add portlet' select box to add a collection portlet.
 
@@ -107,10 +102,9 @@ Go to the home page and see if it looks OK.
     >>> b.open(portal_url)
     >>> print b.contents
     <!DOCTYPE html PUBLIC...
-    <td id="portal-column-one">
-    <div class="visualPadding">
     <div id="portletwrapper-..."
-    class="portletWrapper kssattr-portlethash-..."><dl class="portlet portletCollection portlet-collection-test-collection">
+    class="portletWrapper kssattr-portlethash-..."><dl
+    class="portlet portletCollection portlet-collection-test-collection">
     <dt class="portletHeader">
     <span class="portletTopLeft"></span>
     <a href="http://nohost/plone/test-collection">
@@ -131,11 +125,4 @@ Go to the home page and see if it looks OK.
     </dd>
     </dl>
     </div>
-    <div class="managePortletsLink">
-    <a title="View portlet management screen"
-    href="http://nohost/plone/@@manage-portlets">Manage portlets</a>
-    </div>
-    &nbsp;
-    </div>
-    </td>
     ...
