@@ -3,7 +3,9 @@ Changelog
 
 2.0.3 - unreleased
 ------------------
-
+- Fix 'Show more...' handling so it doesn't cause portletFooter to disappear.
+  fixes http://dev.plone.org/plone/ticket/9415
+  [msmith64]
 
 2.0.2 - 2011-05-18
 ------------------
