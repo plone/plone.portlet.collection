@@ -130,7 +130,7 @@ Go to the home page and see if it looks OK.
 Now test what happens if we toggle the "show more link" option.
 
     >>> b.open(portal_url + '/@@manage-portlets')
-    >>> b.getLink(text="Test Collection", index=1).click()
+    >>> b.getLink(url="http://nohost/plone/++contextportlets++plone.leftcolumn/test-collection/edit?referer=http%3A//nohost/plone/%40%40manage-portlets").click()
     >>> '<h1 class="documentFirstHeading">Edit Collection Portlet</h1>' in b.contents
     True
     >>> b.getControl(label="Show more... link").selected = False
