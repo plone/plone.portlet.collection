@@ -17,8 +17,6 @@ from plone.app.form.widgets.uberselectionwidget import UberSelectionWidget
 
 from plone.i18n.normalizer.interfaces import IIDNormalizer
 
-from Products.ATContentTypes.interface import IATTopic
-
 from plone.portlet.collection import PloneMessageFactory as _
 
 
@@ -36,7 +34,7 @@ class ICollectionPortlet(IPortletDataProvider):
         description=_(u"Find the collection which provides the items to list"),
         required=True,
         source=SearchableTextSourceBinder(
-            {'object_provides': IATTopic.__identifier__},
+            {'portal_type': 'Topic'},
             default_query='path:'))
 
     limit = schema.Int(

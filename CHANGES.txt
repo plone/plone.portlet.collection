@@ -3,8 +3,14 @@ Changelog
 
 2.0.3 - unreleased
 ------------------
+
+- Change the `target_collection` query to use a `portal_type` instead of an
+  `object_provides` restriction. The data for the former is much more likely
+  in the ZODB cache as many catalog queries use it.
+  [hannosch]
+
 - Fix 'Show more...' handling so it doesn't cause portletFooter to disappear.
-  fixes http://dev.plone.org/plone/ticket/9415
+  Fixes http://dev.plone.org/plone/ticket/9415.
   [msmith64]
 
 2.0.2 - 2011-05-18
