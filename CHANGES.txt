@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0.3 - unreleased
+2.0.3 - 2011-07-04
 ------------------
 
 - Change the `target_collection` query to use a `portal_type` instead of an
