@@ -101,7 +101,7 @@ Go to the home page and see if it looks OK.
 
     >>> b.open(portal_url)
     >>> print b.contents
-    <!DOCTYPE html PUBLIC...
+    <!DOCTYPE html...
     <div id="portletwrapper-..."
     class="portletWrapper kssattr-portlethash-..."><dl
     class="portlet portletCollection portlet-collection-test-collection">
@@ -142,7 +142,7 @@ Go back to the home page and see if it looks OK.
 
     >>> b.open(portal_url)
     >>> print b.contents
-    <!DOCTYPE html PUBLIC...
+    <!DOCTYPE html...
     <div id="portletwrapper-..."
     class="portletWrapper kssattr-portlethash-..."><dl
     class="portlet portletCollection portlet-collection-test-collection">
