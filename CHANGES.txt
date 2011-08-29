@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0.4 - unreleased
+2.0.4 (2011-08-29)
 ------------------
 
 - Portlet is shown when user has View permission for the collection.
