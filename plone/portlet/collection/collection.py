@@ -1,5 +1,7 @@
 import random
 
+from AccessControl import getSecurityManager
+
 from zope.interface import implements
 from zope.component import getMultiAdapter, getUtility
 
@@ -179,7 +181,13 @@ class Renderer(base.Renderer):
         if isinstance(collection_path, unicode):
             # restrictedTraverse accepts only strings
             collection_path = str(collection_path)
-        return portal.restrictedTraverse(collection_path, default=None)
+
+        result = portal.unrestrictedTraverse(collection_path, default=None)
+        if result is not None:
+            sm = getSecurityManager()
+            if not sm.checkPermission('View', result):
+                result = None
+        return result
 
 
 class AddForm(base.AddForm):

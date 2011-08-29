@@ -114,6 +114,21 @@ class TestCollectionQuery(TestCase):
         assignment = assignment
         return getMultiAdapter((context, request, view, manager, assignment), IPortletRenderer)
 
+    def testPortletAvailabilityWithPrivateFolders(self):
+        private_folder = self._createType(self.folder, 'Folder', 'private')
+        public_subfolder = self._createType(private_folder, 'Folder', 'public')
+        self.portal.portal_workflow.doActionFor(public_subfolder, 'publish')
+        self.collection = self._createType(public_subfolder, 'Topic', 'collection')
+        self.portal.portal_workflow.doActionFor(self.collection, 'publish')
+
+        mapping = PortletAssignmentMapping()
+        mapping['foo'] = collection.Assignment(header=u"title",
+                target_collection='/Members/test_user_1_/private/public/collection')
+        self.logout()
+        collectionrenderer = self.renderer(context=None, request=None, view=None, manager=None, assignment=mapping['foo'])
+
+        self.assertEquals(self.collection, collectionrenderer.collection())
+
     def testSimpleQuery(self):
         # set up our collection to search for Folders
         crit = self.folder.collection.addCriterion('portal_type', 'ATSimpleStringCriterion')

@@ -4,6 +4,10 @@ Changelog
 2.0.4 - unreleased
 ------------------
 
+- Portlet is shown when user has View permission for the collection.
+  Fixes http://dev.plone.org/plone/ticket/12152
+  [gotcha]
+
 - Fix failing test.
   [davisagli]
 
