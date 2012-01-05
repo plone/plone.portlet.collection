@@ -107,7 +107,10 @@ Go to the home page and see if the portlet looks OK.
     >>> import re
     >>> match = re.search('<div[\W]*id="portletwrapper-.*?</div>', b.contents, flags=re.DOTALL)
     >>> portlet_contents = match.group()
-    >>> print portlet_contents
+    >>> def strip_white_space(contents):
+    ...     lines = [line.strip() for line in contents.splitlines() if line.strip()]
+    ...     return '\n'.join(lines)
+    >>> print strip_white_space(portlet_contents)
     <div id="portletwrapper-..."
     class="portletWrapper kssattr-portlethash-..."><dl
     class="portlet portletCollection portlet-collection-test-collection">
@@ -148,7 +151,7 @@ Go back to the home page and see if it looks OK.
     >>> b.open(portal_url)
     >>> match = re.search('<div[\W]*id="portletwrapper-.*?</div>', b.contents, flags=re.DOTALL)
     >>> portlet_contents = match.group()
-    >>> print portlet_contents
+    >>> print strip_white_space(portlet_contents)
     <div id="portletwrapper-..."
     class="portletWrapper kssattr-portlethash-..."><dl
     class="portlet portletCollection portlet-collection-test-collection">
