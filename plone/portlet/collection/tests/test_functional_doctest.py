@@ -33,6 +33,7 @@ def test_suite():
             test_class=base.FunctionalTestCase,
             optionflags=doctest.REPORT_ONLY_FIRST_FAILURE |
                         doctest.NORMALIZE_WHITESPACE |
+                        doctest.REPORT_NDIFF |
                         doctest.ELLIPSIS),
 
          # We could add more doctest files here as well, by copying the

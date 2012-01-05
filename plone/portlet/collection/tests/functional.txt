@@ -17,7 +17,10 @@ First, we must perform some setup. We use the testbrowser that is shipped
 with Five, as this provides proper Zope 2 integration. Most of the
 documentation, though, is in the underlying zope.testbrower package.
 
-    >>> from Products.Five.testbrowser import Browser
+    >>> try:
+    ...     from Testing.testbrowser import Browser
+    ... except ImportError:
+    ...     from Products.Five.testbrowser import Browser
     >>> b = Browser()
     >>> portal_url = self.portal.absolute_url()
 
@@ -83,7 +86,8 @@ Use the 'Add portlet' select box to add a collection portlet.
     >>> val = "/++contextportlets++plone.leftcolumn/+/plone.portlet.collection.Collection"
     >>> add_portlet_select.getControl(value=val).selected = True
     >>> leftcolumn_form.submit()
-    >>> '<h1 class="documentFirstHeading">Add Collection Portlet</h1>' in b.contents
+    >>> import re  # '[\W]*' is white space
+    >>> re.search('<h1[\W]*class="documentFirstHeading"[\W]*>Add Collection Portlet</h1>', b.contents) is not None
     True
 
 Use your new collection for testing. It should already be available at the root
@@ -97,11 +101,13 @@ of the site. Show only two items to make the test sanely terse.
     >>> b.url == portal_url + "/@@manage-portlets"
     True
 
-Go to the home page and see if it looks OK.
+Go to the home page and see if the portlet looks OK.
 
     >>> b.open(portal_url)
-    >>> print b.contents
-    <!DOCTYPE html...
+    >>> import re
+    >>> match = re.search('<div[\W]*id="portletwrapper-.*?</div>', b.contents, flags=re.DOTALL)
+    >>> portlet_contents = match.group()
+    >>> print portlet_contents
     <div id="portletwrapper-..."
     class="portletWrapper kssattr-portlethash-..."><dl
     class="portlet portletCollection portlet-collection-test-collection">
@@ -125,7 +131,6 @@ Go to the home page and see if it looks OK.
     </dd>
     </dl>
     </div>
-    ...
 
 Now test what happens if we toggle the "show more link" option.
 
@@ -141,8 +146,9 @@ Now test what happens if we toggle the "show more link" option.
 Go back to the home page and see if it looks OK.
 
     >>> b.open(portal_url)
-    >>> print b.contents
-    <!DOCTYPE html...
+    >>> match = re.search('<div[\W]*id="portletwrapper-.*?</div>', b.contents, flags=re.DOTALL)
+    >>> portlet_contents = match.group()
+    >>> print portlet_contents
     <div id="portletwrapper-..."
     class="portletWrapper kssattr-portlethash-..."><dl
     class="portlet portletCollection portlet-collection-test-collection">
@@ -159,4 +165,3 @@ Go back to the home page and see if it looks OK.
     </dd>
     </dl>
     </div>
-    ...
