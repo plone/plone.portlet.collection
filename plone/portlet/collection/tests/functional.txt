@@ -126,9 +126,7 @@ Go to the home page and see if the portlet looks OK.
     <dd class="portletFooter">
     <span class="portletBottomLeft"></span>
     <span>
-    <a href="http://nohost/plone/test-collection">
-    More&hellip;
-    </a>
+    <a href="http://nohost/plone/test-collection">...More&hellip;...</a>
     </span>
     <span class="portletBottomRight"></span>
     </dd>
@@ -139,7 +137,7 @@ Now test what happens if we toggle the "show more link" option.
 
     >>> b.open(portal_url + '/@@manage-portlets')
     >>> b.getLink(url="http://nohost/plone/++contextportlets++plone.leftcolumn/test-collection/edit?referer=http%3A//nohost/plone/%40%40manage-portlets").click()
-    >>> '<h1 class="documentFirstHeading">Edit Collection Portlet</h1>' in b.contents
+    >>> re.search('<h1[\W]*class="documentFirstHeading"[\W]*>Edit Collection Portlet</h1>', b.contents) is not None
     True
     >>> b.getControl(label="Show more... link").selected = False
     >>> b.getControl(name="form.actions.save").click()
