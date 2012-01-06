@@ -86,8 +86,8 @@ Use the 'Add portlet' select box to add a collection portlet.
     >>> val = "/++contextportlets++plone.leftcolumn/+/plone.portlet.collection.Collection"
     >>> add_portlet_select.getControl(value=val).selected = True
     >>> leftcolumn_form.submit()
-    >>> import re  # '[\W]*' is white space
-    >>> re.search('<h1[\W]*class="documentFirstHeading"[\W]*>Add Collection Portlet</h1>', b.contents) is not None
+    >>> import re  # '\s' is white space, '+' is at least one, '*' is zero or more matches.
+    >>> re.search('<h1\s+class="documentFirstHeading"\s*>\s*Add Collection Portlet\s*</h1>', b.contents) is not None
     True
 
 Use your new collection for testing. It should already be available at the root
@@ -105,7 +105,7 @@ Go to the home page and see if the portlet looks OK.
 
     >>> b.open(portal_url)
     >>> import re
-    >>> match = re.search('<div[\W]*id="portletwrapper-.*?</div>', b.contents, flags=re.DOTALL)
+    >>> match = re.search('<div\s+id="portletwrapper-.*?</div>', b.contents, flags=re.DOTALL)
     >>> portlet_contents = match.group()
     >>> def strip_white_space(contents):
     ...     lines = [line.strip() for line in contents.splitlines() if line.strip()]
@@ -137,7 +137,7 @@ Now test what happens if we toggle the "show more link" option.
 
     >>> b.open(portal_url + '/@@manage-portlets')
     >>> b.getLink(url="http://nohost/plone/++contextportlets++plone.leftcolumn/test-collection/edit?referer=http%3A//nohost/plone/%40%40manage-portlets").click()
-    >>> re.search('<h1[\W]*class="documentFirstHeading"[\W]*>Edit Collection Portlet</h1>', b.contents) is not None
+    >>> re.search('<h1\s+class="documentFirstHeading"\s*>\s*Edit Collection Portlet\s*</h1>', b.contents) is not None
     True
     >>> b.getControl(label="Show more... link").selected = False
     >>> b.getControl(name="form.actions.save").click()
@@ -147,7 +147,7 @@ Now test what happens if we toggle the "show more link" option.
 Go back to the home page and see if it looks OK.
 
     >>> b.open(portal_url)
-    >>> match = re.search('<div[\W]*id="portletwrapper-.*?</div>', b.contents, flags=re.DOTALL)
+    >>> match = re.search('<div\s+id="portletwrapper-.*?</div>', b.contents, flags=re.DOTALL)
     >>> portlet_contents = match.group()
     >>> print strip_white_space(portlet_contents)
     <div id="portletwrapper-..."
