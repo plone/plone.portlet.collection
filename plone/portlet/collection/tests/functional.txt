@@ -54,26 +54,21 @@ and we ensure that we get the friendly logged-in message:
     True
 
 Now that we're logged in, create a collection for testing purposes.
+Just make it a collection of everything.
 
     >>> b.open(portal_url)
     >>> b.getLink(url=portal_url + "/folder_factories").click()
     >>> b.getControl(label="Collection").selected = True
     >>> b.getControl(name="form.button.Add").click()
     >>> b.getControl(name="title").value = "Test Collection"
+    >>> b.getControl(name="addindex").getControl('Review state').selected = True
+    >>> b.getControl('Add').click()
+    >>> b.getControl(name="addoperator").getControl('Is').selected = True
+    >>> b.getControl('Add').click()
+    >>> b.getControl('Published').selected = True
     >>> b.getControl(name="form.button.save").click()
     >>> b.url == portal_url + "/test-collection/"
     True
-
-Just make it a collection of everything.
-
-    >>> b.getLink(text="Criteria").click()
-    >>> b.getControl(label="Field name").getControl(value="Type").click()
-    >>> select_types = b.getControl(label="Criteria type")
-    >>> select_types.getControl(value="ATPortalTypeCriterion").click()
-    >>> b.getControl(name="form.button.AddCriterion", index=0).click()
-    >>> select_crit = b.getControl(name="crit__Type_ATPortalTypeCriterion_value:list")
-    >>> for c in select_crit.controls: c.selected = True
-    >>> b.getForm(action="criterion_edit_form", index=0).submit()
 
 Now open the portlet manager for the site.
 

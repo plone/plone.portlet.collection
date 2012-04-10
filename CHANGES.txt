@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.0.5 (unreleased)
-------------------
+2.1 (unreleased)
+----------------
 
 - Support new-style collections a la plone.app.collection.
   [davisagli]
