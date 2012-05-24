@@ -4,7 +4,8 @@ Changelog
 2.1.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- accessibility improvements for screen readers regarding "more" links, see https://dev.plone.org/ticket/11982 
+  [rmattb, applied by polyester] 
 
 
 2.1 (2012-04-15)
