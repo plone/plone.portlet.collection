@@ -121,7 +121,10 @@ Go to the home page and see if the portlet looks OK.
     <dd class="portletFooter">
     <span class="portletBottomLeft"></span>
     <span>
-    <a href="http://nohost/plone/test-collection">...More&hellip;...</a>
+    <a href="http://nohost/plone/test-collection">
+    <span class="hiddenStructure">Test Collection - </span>
+    <span>More&hellip;</span>
+    </a>
     </span>
     <span class="portletBottomRight"></span>
     </dd>

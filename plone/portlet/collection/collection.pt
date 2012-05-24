@@ -43,8 +43,9 @@
     <dd class="portletFooter">
         <span class="portletBottomLeft"></span>
         <span tal:condition="view/data/show_more">
-        <a tal:attributes="href collection_url" i18n:translate="more_url">
-            More&hellip;
+        <a tal:attributes="href collection_url">
+           <span class="hiddenStructure"><span tal:replace="view/data/header" /> - </span>
+           <span i18n:translate="more_url">More&hellip;</span>
         </a>
         </span>
         <span class="portletBottomRight"></span>
