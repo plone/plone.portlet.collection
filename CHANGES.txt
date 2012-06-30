@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.1 (unreleased)
+2.1.1 (2012-06-29)
 ------------------
 
 - accessibility improvements for screen readers regarding "more" links, see https://dev.plone.org/ticket/11982 
