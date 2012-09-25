@@ -196,7 +196,7 @@ class AddForm(base.AddForm):
     form_fields['target_collection'].custom_widget = UberSelectionWidget
 
     label = _(u"Add Collection Portlet")
-    description = _(u"This portlet display a listing of items from a "
+    description = _(u"This portlet displays a listing of items from a "
                     u"Collection.")
 
     def create(self, data):
@@ -209,5 +209,5 @@ class EditForm(base.EditForm):
     form_fields['target_collection'].custom_widget = UberSelectionWidget
 
     label = _(u"Edit Collection Portlet")
-    description = _(u"This portlet display a listing of items from a "
+    description = _(u"This portlet displays a listing of items from a "
                     u"Collection.")
