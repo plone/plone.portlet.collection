@@ -18,14 +18,14 @@
     <tal:events tal:repeat="obj view/results">
     <dd class="portletItem"
         tal:define="oddrow repeat/obj/odd;
-                    useView    python:obj.portal_type in viewActions;
-                    itemUrl    python:useView and obj.getURL() + '/view' or obj.getURL();
-                    item_icon python:getIcon(obj);"
-
+                    useView python:obj.portal_type in viewActions;
+                    itemUrl python:useView and obj.getURL() + '/view' or obj.getURL();
+                    item_icon python:getIcon(obj);
+                    normalizeString nocall:plone_view/normalizeString;"
         tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
         <a href="#"
            tal:attributes="href itemUrl;
-                           class python:'tile contenttype-'+obj.portal_type.lower().replace(' ','-');
+                           class python:'tile contenttype-' + normalizeString(item.portal_type).replace(' ','-');
                            title obj/Description">
             <img tal:replace="structure item_icon/html_tag" />
             <span tal:replace="obj/pretty_title_or_id">
