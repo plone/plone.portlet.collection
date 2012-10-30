@@ -25,7 +25,7 @@
         tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
         <a href="#"
            tal:attributes="href itemUrl;
-                           class python:'tile contenttype-' + normalizeString(item.portal_type).replace(' ','-');
+                           class python:'tile contenttype-' + normalizeString(obj.portal_type).replace(' ','-');
                            title obj/Description">
             <img tal:replace="structure item_icon/html_tag" />
             <span tal:replace="obj/pretty_title_or_id">
