@@ -3,8 +3,7 @@
     tal:define="collection_url view/collection_url;
                 plone_view context/@@plone;
                 toLocalizedTime nocall:plone_view/toLocalizedTime;
-                viewActions here/portal_properties/site_properties/typesUseViewActionInListings|python:();
-                getIcon nocall:plone_view/getIcon;"
+                viewActions here/portal_properties/site_properties/typesUseViewActionInListings|python:();"
     tal:attributes="class string:portlet portletCollection ${view/css_class}">
 
     <dt class="portletHeader">
@@ -20,14 +19,12 @@
         tal:define="oddrow repeat/obj/odd;
                     useView python:obj.portal_type in viewActions;
                     itemUrl python:useView and obj.getURL() + '/view' or obj.getURL();
-                    item_icon python:getIcon(obj);
                     normalizeString nocall:plone_view/normalizeString;"
         tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
         <a href="#"
            tal:attributes="href itemUrl;
                            class python:'tile contenttype-' + normalizeString(obj.portal_type);
                            title obj/Description">
-            <img tal:replace="structure item_icon/html_tag" />
             <span tal:replace="obj/title_or_id">
              Title
             </span>
