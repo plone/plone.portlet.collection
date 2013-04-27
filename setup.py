@@ -6,7 +6,7 @@ setup(name='plone.portlet.collection',
       version=version,
       description="A portlet that fetches results from a collection",
       long_description=open("README.txt").read() + "\n" +
-                       open("CHANGES.txt").read(),
+      open("CHANGES.txt").read(),
       classifiers=[
           "Environment :: Web Environment",
           "Framework :: Plone",
@@ -14,7 +14,7 @@ setup(name='plone.portlet.collection',
           "License :: OSI Approved :: GNU General Public License (GPL)",
           "Operating System :: OS Independent",
           "Programming Language :: Python",
-        ],
+      ],
       keywords='',
       author='Plone Foundation',
       author_email='plone-developers@lists.sourceforge.net',
@@ -37,4 +37,4 @@ setup(name='plone.portlet.collection',
               'plone.app.testing',
           ],
       }
-)
+      )

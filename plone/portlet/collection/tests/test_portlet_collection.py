@@ -31,8 +31,10 @@ class TestPortlet(unittest.TestCase):
         self.folder = self.portal.folder
 
     def testPortletTypeRegistered(self):
-        portlet = getUtility(IPortletType, name='plone.portlet.collection.Collection')
-        self.assertEquals(portlet.addview, 'plone.portlet.collection.Collection')
+        portlet = getUtility(
+            IPortletType, name='plone.portlet.collection.Collection')
+        self.assertEquals(
+            portlet.addview, 'plone.portlet.collection.Collection')
 
     def testInterfaces(self):
         portlet = collection.Assignment(header=u"title")
@@ -40,8 +42,10 @@ class TestPortlet(unittest.TestCase):
         self.failUnless(IPortletDataProvider.providedBy(portlet.data))
 
     def testInvokeAddview(self):
-        portlet = getUtility(IPortletType, name='plone.portlet.collection.Collection')
-        mapping = self.portal.restrictedTraverse('++contextportlets++plone.leftcolumn')
+        portlet = getUtility(
+            IPortletType, name='plone.portlet.collection.Collection')
+        mapping = self.portal.restrictedTraverse(
+            '++contextportlets++plone.leftcolumn')
         for m in mapping.keys():
             del mapping[m]
         addview = mapping.restrictedTraverse('+/' + portlet.addview)
@@ -60,10 +64,12 @@ class TestPortlet(unittest.TestCase):
         context = self.folder
         request = self.folder.REQUEST
         view = self.folder.restrictedTraverse('@@plone')
-        manager = getUtility(IPortletManager, name='plone.rightcolumn', context=self.portal)
+        manager = getUtility(
+            IPortletManager, name='plone.rightcolumn', context=self.portal)
         assignment = collection.Assignment(header=u"title")
 
-        renderer = getMultiAdapter((context, request, view, manager, assignment), IPortletRenderer)
+        renderer = getMultiAdapter((
+            context, request, view, manager, assignment), IPortletRenderer)
         self.failUnless(isinstance(renderer, collection.Renderer))
 
 
@@ -83,7 +89,8 @@ class TestRenderer(unittest.TestCase):
         context = context or self.folder
         request = request or self.folder.REQUEST
         view = view or self.folder.restrictedTraverse('@@plone')
-        manager = manager or getUtility(IPortletManager, name='plone.rightcolumn', context=self.portal)
+        manager = manager or getUtility(
+            IPortletManager, name='plone.rightcolumn', context=self.portal)
         assignment = assignment or collection.Assignment(header=u"title")
 
         return getMultiAdapter((context, request, view, manager, assignment), IPortletRenderer)
@@ -128,7 +135,8 @@ class TestCollectionQuery(unittest.TestCase):
         setRoles(self.portal, TEST_USER_ID, ['Manager'])
         self.portal.invokeFactory('Folder', 'folder')
         self.folder = self.portal.folder
-        self.collection = self._createType(self.folder, 'Collection', 'collection')
+        self.collection = self._createType(
+            self.folder, 'Collection', 'collection')
 
     def _createType(self, context, portal_type, id, **kwargs):
         """Helper method to create a new type
@@ -146,7 +154,8 @@ class TestCollectionQuery(unittest.TestCase):
         context = context or self.folder
         request = request or self.folder.REQUEST
         view = view or self.folder.restrictedTraverse('@@plone')
-        manager = manager or getUtility(IPortletManager, name='plone.leftcolumn', context=self.portal)
+        manager = manager or getUtility(
+            IPortletManager, name='plone.leftcolumn', context=self.portal)
         assignment = assignment
         return getMultiAdapter((context, request, view, manager, assignment), IPortletRenderer)
 
@@ -154,14 +163,16 @@ class TestCollectionQuery(unittest.TestCase):
         private_folder = self._createType(self.folder, 'Folder', 'private')
         public_subfolder = self._createType(private_folder, 'Folder', 'public')
         self.portal.portal_workflow.doActionFor(public_subfolder, 'publish')
-        self.collection = self._createType(public_subfolder, 'Collection', 'collection')
+        self.collection = self._createType(
+            public_subfolder, 'Collection', 'collection')
         self.portal.portal_workflow.doActionFor(self.collection, 'publish')
 
         mapping = PortletAssignmentMapping()
         mapping['foo'] = collection.Assignment(header=u"title",
-                target_collection='/folder/private/public/collection')
+                                               target_collection='/folder/private/public/collection')
         logout()
-        collectionrenderer = self.renderer(context=None, request=None, view=None, manager=None, assignment=mapping['foo'])
+        collectionrenderer = self.renderer(
+            context=None, request=None, view=None, manager=None, assignment=mapping['foo'])
 
         self.assertEquals(self.collection, collectionrenderer.collection())
 
@@ -175,8 +186,8 @@ class TestCollectionQuery(unittest.TestCase):
 
         # add a few folders
         for i in range(6):
-            self.folder.invokeFactory('Folder', 'folder_%s'%i)
-            getattr(self.folder, 'folder_%s'%i).reindexObject()
+            self.folder.invokeFactory('Folder', 'folder_%s' % i)
+            getattr(self.folder, 'folder_%s' % i).reindexObject()
 
         # the folders are returned by the topic
         collection_num_items = len(self.folder.collection.results())
@@ -196,21 +207,22 @@ class TestCollectionQuery(unittest.TestCase):
             assignment=mapping['foo']
         )
         # we want the portlet to return us the same results as the collection
-        self.assertEqual(collection_num_items, len(collectionrenderer.results()))
+        self.assertEqual(collection_num_items, len(
+            collectionrenderer.results()))
 
     def testRandomQuery(self):
         # set up our portlet renderer
         mapping = PortletAssignmentMapping()
         mapping['foo'] = collection.Assignment(header=u"title", random=True,
-            target_collection='/folder/collection')
+                                               target_collection='/folder/collection')
         # add some folders
         for i in range(6):
-            self.folder.invokeFactory('Folder', 'folder_%s'%i)
-            getattr(self.folder, 'folder_%s'%i).reindexObject()
+            self.folder.invokeFactory('Folder', 'folder_%s' % i)
+            getattr(self.folder, 'folder_%s' % i).reindexObject()
 
         # collection with no criteria -- should return empty list
         collectionrenderer = self.renderer(context=None, request=None,
-            view=None, manager=None, assignment=mapping['foo'])
+                                           view=None, manager=None, assignment=mapping['foo'])
         self.assertEqual(len(collectionrenderer.results()), 0)
 
         # collection with simple criterion -- should return 1 (random) folder
@@ -220,7 +232,7 @@ class TestCollectionQuery(unittest.TestCase):
             'v': 'Folder',
         }]
         collectionrenderer = self.renderer(context=None, request=None,
-            view=None, manager=None, assignment=mapping['foo'])
+                                           view=None, manager=None, assignment=mapping['foo'])
         self.assertEqual(len(collectionrenderer.results()), 1)
 
         # collection with multiple criteria -- should behave similarly
@@ -237,26 +249,26 @@ class TestCollectionQuery(unittest.TestCase):
             },
         ]
         collectionrenderer = self.renderer(context=None, request=None,
-            view=None, manager=None, assignment=mapping['foo'])
+                                           view=None, manager=None, assignment=mapping['foo'])
         collectionrenderer.results()
 
         # collection with sorting -- should behave similarly (sort is ignored
         # internally)
         self.folder.collection.sort_on = 'modified'
         collectionrenderer = self.renderer(context=None, request=None,
-            view=None, manager=None, assignment=mapping['foo'])
+                                           view=None, manager=None, assignment=mapping['foo'])
         self.assertEqual(len(collectionrenderer.results()), 1)
 
         # same criteria, now with limit set to 2 -- should return 2 (random)
         # folders
         collectionrenderer = self.renderer(context=None, request=None,
-            view=None, manager=None, assignment=mapping['foo'])
+                                           view=None, manager=None, assignment=mapping['foo'])
         collectionrenderer.data.limit = 2
         self.assertEqual(len(collectionrenderer.results()), 2)
 
         # make sure there's no error if the limit is greater than the # of
         # results found
         collectionrenderer = self.renderer(context=None, request=None,
-            view=None, manager=None, assignment=mapping['foo'])
+                                           view=None, manager=None, assignment=mapping['foo'])
         collectionrenderer.data.limit = 10
         self.failUnless(len(collectionrenderer.results()) >= 6)
