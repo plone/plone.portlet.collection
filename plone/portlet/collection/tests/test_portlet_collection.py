@@ -1,4 +1,7 @@
 from plone.app.portlets.storage import PortletAssignmentMapping
+from plone.app.testing import TEST_USER_ID
+from plone.app.testing import setRoles
+from plone.app.testing import logout
 from plone.portlets.interfaces import IPortletType
 from plone.portlets.interfaces import IPortletManager
 from plone.portlets.interfaces import IPortletAssignment
@@ -8,13 +11,24 @@ from Products.CMFCore.utils import getToolByName
 from zope.component import getUtility, getMultiAdapter
 
 from plone.portlet.collection import collection
-from plone.portlet.collection.tests.base import TestCase
+from plone.portlet.collection.testing import (
+    PLONE_PORTLET_COLLECTION_INTEGRATION_TESTING
+)
+
+import unittest2 as unittest
 
 
-class TestPortlet(TestCase):
+class TestPortlet(unittest.TestCase):
 
-    def afterSetUp(self):
-        self.setRoles(('Manager', ))
+    layer = PLONE_PORTLET_COLLECTION_INTEGRATION_TESTING
+
+    def setUp(self):
+        self.portal = self.layer['portal']
+        self.request = self.layer['request']
+        self.request['ACTUAL_URL'] = self.portal.absolute_url()
+        setRoles(self.portal, TEST_USER_ID, ['Manager'])
+        self.portal.invokeFactory('Folder', 'folder')
+        self.folder = self.portal.folder
 
     def testPortletTypeRegistered(self):
         portlet = getUtility(IPortletType, name='plone.portlet.collection.Collection')
@@ -53,10 +67,17 @@ class TestPortlet(TestCase):
         self.failUnless(isinstance(renderer, collection.Renderer))
 
 
-class TestRenderer(TestCase):
+class TestRenderer(unittest.TestCase):
 
-    def afterSetUp(self):
-        self.setRoles(('Manager', ))
+    layer = PLONE_PORTLET_COLLECTION_INTEGRATION_TESTING
+
+    def setUp(self):
+        self.portal = self.layer['portal']
+        self.request = self.layer['request']
+        self.request['ACTUAL_URL'] = self.portal.absolute_url()
+        setRoles(self.portal, TEST_USER_ID, ['Manager'])
+        self.portal.invokeFactory('Folder', 'folder')
+        self.folder = self.portal.folder
 
     def renderer(self, context=None, request=None, view=None, manager=None, assignment=None):
         context = context or self.folder
@@ -68,19 +89,27 @@ class TestRenderer(TestCase):
         return getMultiAdapter((context, request, view, manager, assignment), IPortletRenderer)
 
     def test_render(self):
-        r = self.renderer(context=self.portal, assignment=collection.Assignment(header=u"title"))
+        r = self.renderer(
+            context=self.portal,
+            assignment=collection.Assignment(header=u"title")
+        )
         r = r.__of__(self.folder)
         r.update()
         output = r.render()
         self.assertTrue('title' in output)
 
     def test_collection_path_unicode(self):
+        self.portal.invokeFactory('Collection', 'events')
         # Cover problem in #9184
-        r = self.renderer(context=self.portal,
-                          assignment=collection.Assignment(header=u"title",
-                                                           target_collection=u"/events"))
-        r = r.__of__(self.folder)
-        self.assertEqual(r.collection().id, 'events')
+        renderer = self.renderer(
+            context=self.portal,
+            assignment=collection.Assignment(
+                header=u"title",
+                target_collection=u"/events"
+            )
+        )
+        renderer = renderer.__of__(self.folder)
+        self.assertEqual(renderer.collection().id, 'events')
 
     def test_css_class(self):
         r = self.renderer(context=self.portal,
@@ -88,11 +117,18 @@ class TestRenderer(TestCase):
         self.assertEquals('portlet-collection-welcome-text', r.css_class())
 
 
-class TestCollectionQuery(TestCase):
+class TestCollectionQuery(unittest.TestCase):
 
-    def afterSetUp(self):
-        self.setRoles(('Manager', ))
-        self.collection = self._createType(self.folder, 'Topic', 'collection')
+    layer = PLONE_PORTLET_COLLECTION_INTEGRATION_TESTING
+
+    def setUp(self):
+        self.portal = self.layer['portal']
+        self.request = self.layer['request']
+        self.request['ACTUAL_URL'] = self.portal.absolute_url()
+        setRoles(self.portal, TEST_USER_ID, ['Manager'])
+        self.portal.invokeFactory('Folder', 'folder')
+        self.folder = self.portal.folder
+        self.collection = self._createType(self.folder, 'Collection', 'collection')
 
     def _createType(self, context, portal_type, id, **kwargs):
         """Helper method to create a new type
@@ -118,21 +154,24 @@ class TestCollectionQuery(TestCase):
         private_folder = self._createType(self.folder, 'Folder', 'private')
         public_subfolder = self._createType(private_folder, 'Folder', 'public')
         self.portal.portal_workflow.doActionFor(public_subfolder, 'publish')
-        self.collection = self._createType(public_subfolder, 'Topic', 'collection')
+        self.collection = self._createType(public_subfolder, 'Collection', 'collection')
         self.portal.portal_workflow.doActionFor(self.collection, 'publish')
 
         mapping = PortletAssignmentMapping()
         mapping['foo'] = collection.Assignment(header=u"title",
-                target_collection='/Members/test_user_1_/private/public/collection')
-        self.logout()
+                target_collection='/folder/private/public/collection')
+        logout()
         collectionrenderer = self.renderer(context=None, request=None, view=None, manager=None, assignment=mapping['foo'])
 
         self.assertEquals(self.collection, collectionrenderer.collection())
 
     def testSimpleQuery(self):
         # set up our collection to search for Folders
-        crit = self.folder.collection.addCriterion('portal_type', 'ATSimpleStringCriterion')
-        crit.setValue('Folder')
+        self.folder.collection.query = [{
+            'i': 'portal_type',
+            'o': 'plone.app.querystring.operation.string.is',
+            'v': 'Folder',
+        }]
 
         # add a few folders
         for i in range(6):
@@ -140,22 +179,30 @@ class TestCollectionQuery(TestCase):
             getattr(self.folder, 'folder_%s'%i).reindexObject()
 
         # the folders are returned by the topic
-        collection_num_items = len(self.folder.collection.queryCatalog())
+        collection_num_items = len(self.folder.collection.results())
         # We better have some folders
         self.failUnless(collection_num_items >= 6)
 
         mapping = PortletAssignmentMapping()
-        mapping['foo'] = collection.Assignment(header=u"title", target_collection='/Members/test_user_1_/collection')
-        collectionrenderer = self.renderer(context=None, request=None, view=None, manager=None, assignment=mapping['foo'])
-
+        mapping['foo'] = collection.Assignment(
+            header=u"title",
+            target_collection='/folder/collection'
+        )
+        collectionrenderer = self.renderer(
+            context=None,
+            request=None,
+            view=None,
+            manager=None,
+            assignment=mapping['foo']
+        )
         # we want the portlet to return us the same results as the collection
-        self.assertEquals(collection_num_items, len(collectionrenderer.results()))
+        self.assertEqual(collection_num_items, len(collectionrenderer.results()))
 
     def testRandomQuery(self):
         # set up our portlet renderer
         mapping = PortletAssignmentMapping()
         mapping['foo'] = collection.Assignment(header=u"title", random=True,
-            target_collection='/Members/test_user_1_/collection')
+            target_collection='/folder/collection')
         # add some folders
         for i in range(6):
             self.folder.invokeFactory('Folder', 'folder_%s'%i)
@@ -167,24 +214,35 @@ class TestCollectionQuery(TestCase):
         self.assertEqual(len(collectionrenderer.results()), 0)
 
         # collection with simple criterion -- should return 1 (random) folder
-        crit = self.folder.collection.addCriterion('portal_type',
-            'ATSimpleStringCriterion')
-        crit.setValue('Folder')
+        self.folder.collection.query = [{
+            'i': 'portal_type',
+            'o': 'plone.app.querystring.operation.string.is',
+            'v': 'Folder',
+        }]
         collectionrenderer = self.renderer(context=None, request=None,
             view=None, manager=None, assignment=mapping['foo'])
         self.assertEqual(len(collectionrenderer.results()), 1)
 
         # collection with multiple criteria -- should behave similarly
-        crit = self.folder.collection.addCriterion('Creator',
-            'ATSimpleStringCriterion')
-        crit.setValue('test_user_1_')
+        self.folder.collection.query = [
+            {
+                'i': 'portal_type',
+                'o': 'plone.app.querystring.operation.string.is',
+                'v': 'Folder',
+            },
+            {
+                'i': 'creator',
+                'o': 'plone.app.querystring.operation.string.is',
+                'v': 'test_user_1_',
+            },
+        ]
         collectionrenderer = self.renderer(context=None, request=None,
             view=None, manager=None, assignment=mapping['foo'])
         collectionrenderer.results()
 
         # collection with sorting -- should behave similarly (sort is ignored
         # internally)
-        self.folder.collection.setSortCriterion('modified', False)
+        self.folder.collection.sort_on = 'modified'
         collectionrenderer = self.renderer(context=None, request=None,
             view=None, manager=None, assignment=mapping['foo'])
         self.assertEqual(len(collectionrenderer.results()), 1)
@@ -202,12 +260,3 @@ class TestCollectionQuery(TestCase):
             view=None, manager=None, assignment=mapping['foo'])
         collectionrenderer.data.limit = 10
         self.failUnless(len(collectionrenderer.results()) >= 6)
-
-
-def test_suite():
-    from unittest import TestSuite, makeSuite
-    suite = TestSuite()
-    suite.addTest(makeSuite(TestPortlet))
-    suite.addTest(makeSuite(TestRenderer))
-    suite.addTest(makeSuite(TestCollectionQuery))
-    return suite

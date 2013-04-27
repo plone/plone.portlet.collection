@@ -32,4 +32,9 @@ setup(name='plone.portlet.collection',
           'plone.app.vocabularies',
           'plone.app.form',
       ],
-      )
+      extras_require={
+          'test': [
+              'plone.app.testing',
+          ],
+      }
+)

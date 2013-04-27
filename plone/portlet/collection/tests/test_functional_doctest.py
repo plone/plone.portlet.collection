@@ -1,42 +1,37 @@
-"""This is an functional doctest test. It uses PloneTestCase and doctest
-syntax. In the test itself, we use zope.testbrowser to test end-to-end
-functionality, including the UI.
+# -*- coding: utf-8 -*-
+"""Functional Doctests for plone.portlet.collection.
 
-One important thing to note: zope.testbrowser is not JavaScript aware! For
-that you need a real browser. Look at zope.testbrowser.real and Selenium
-if you require "real" browser testing.
+   These test are only triggered when Plone 4 (and plone.testing) is installed.
 """
-
-import unittest
 import doctest
 
-from Testing import ZopeTestCase as ztc
+import unittest2 as unittest
+import pprint
 
-from plone.portlet.collection.tests import base
+from plone.testing import layered
+
+from plone.portlet.collection.testing import \
+    PLONE_PORTLET_COLLECTION_FUNCTIONAL_TESTING
+
+
+optionflags = (
+    doctest.ELLIPSIS |
+    doctest.NORMALIZE_WHITESPACE |
+    doctest.REPORT_ONLY_FIRST_FAILURE
+)
+normal_testfiles = [
+    'functional.txt',
+]
+
 
 def test_suite():
-    """This sets up a test suite that actually runs the tests in the class
-    above.
-    """
-    return unittest.TestSuite([
-
-        # Here we create a test suite passing the name of a file relative
-        # to the package home, the name of the package, and the test base
-        # class to use. Here the base class is a full PloneTestCase, which
-        # means that we get a full Plone site set up.
-
-        # The actual test is in functional.txt
-
-        ztc.ZopeDocFileSuite(
-            'functional.txt',
-            package='plone.portlet.collection.tests',
-            test_class=base.FunctionalTestCase,
-            optionflags=doctest.REPORT_ONLY_FIRST_FAILURE |
-                        doctest.NORMALIZE_WHITESPACE |
-                        doctest.REPORT_NDIFF |
-                        doctest.ELLIPSIS),
-
-         # We could add more doctest files here as well, by copying the
-         # file block above.
-
-         ])
+    suite = unittest.TestSuite()
+    suite.addTests([
+        layered(doctest.DocFileSuite(test,
+                                     optionflags=optionflags,
+                                     globs={'pprint': pprint.pprint,
+                                            }
+                                     ),
+                layer=PLONE_PORTLET_COLLECTION_FUNCTIONAL_TESTING)
+        for test in normal_testfiles])
+    return suite

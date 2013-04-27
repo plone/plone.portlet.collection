@@ -2,105 +2,73 @@
 A functional doctest
 ====================
 
-This is a full-blown functional test. The emphasis here is on testing what
-the user may input and see, and the system is largely tested as a black box.
-We use PloneTestCase to set up this test as well, so we have a full Plone site
-to play with. We *can* inspect the state of the portal, e.g. using
-self.portal and self.folder, but it is often frowned upon since you are not
-treating the system as a black box. Also, if you, for example, log in or set
-roles using calls like self.setRoles(), these are not reflected in the test
-browser, which runs as a separate session.
+Set up testbrowser::
 
-Being a doctest, we can tell a story here.
+    >>> app = layer['app']
+    >>> from plone.testing.z2 import Browser
+    >>> browser = Browser(app)
+    >>> browser.handleErrors = False
+    >>> browser.addHeader('Authorization', 'Basic admin:secret')
+    >>> portal = layer['portal']
+    >>> portal_url = 'http://nohost/plone'
 
-First, we must perform some setup. We use the testbrowser that is shipped
-with Five, as this provides proper Zope 2 integration. Most of the
-documentation, though, is in the underlying zope.testbrower package.
-
-    >>> try:
-    ...     from Testing.testbrowser import Browser
-    ... except ImportError:
-    ...     from Products.Five.testbrowser import Browser
-    >>> b = Browser()
-    >>> portal_url = self.portal.absolute_url()
-
-The following is useful when writing and debugging testbrowser tests. It lets
-us see all error messages in the error_log.
-
-    >>> self.portal.error_log._ignored_exceptions = ()
-
-With that in place we can go to the portal front page and log in. We will
-do this using the default user from PloneTestCase:
-
-    >>> from Products.PloneTestCase.setup import portal_owner, default_password
-
-    >>> b.open(portal_url + "/login_form")
-
-We have the login portlet, so let's use that.
-
-    >>> b.getControl(name='__ac_name').value = portal_owner
-    >>> b.getControl(name='__ac_password').value = default_password
-    >>> b.getControl(name='submit').click()
-
-Here we set the value of the fields on the login form and then simulate a
-submit click.
-
-We then test that we are still on the same page
-and we ensure that we get the friendly logged-in message:
-
-    >>> b.url == portal_url + "/login_form"
-    True
-    >>> "You are now logged in" in b.contents
+    >>> browser.open(portal_url)
+    >>> browser.getLink(url=portal_url + "/folder_factories").click()
+    >>> browser.getControl(label="Page").selected = True
+    >>> browser.getControl(name="form.button.Add").click()
+    >>> browser.getControl(name="title").value = "Test Document"
+    >>> browser.getControl(name="form.button.save").click()
+    >>> 'Changes saved' in browser.contents
     True
 
-Now that we're logged in, create a collection for testing purposes.
-Just make it a collection of everything.
+Create a collection for testing purposes. Just make it a collection of
+everything.
 
-    >>> b.open(portal_url)
-    >>> b.getLink(url=portal_url + "/folder_factories").click()
-    >>> b.getControl(label="Collection").selected = True
-    >>> b.getControl(name="form.button.Add").click()
-    >>> b.getControl(name="title").value = "Test Collection"
-    >>> b.getControl(name="addindex").getControl('Review state').selected = True
-    >>> b.getControl('Add').click()
-    >>> b.getControl(name="addoperator").getControl('Is').selected = True
-    >>> b.getControl('Add').click()
-    >>> b.getControl('Published').selected = True
-    >>> b.getControl(name="form.button.save").click()
-    >>> b.url == portal_url + "/test-collection/"
+    >>> browser.open(portal_url)
+    >>> browser.getLink(url=portal_url + "/folder_factories").click()
+    >>> browser.getControl(label="Collection").selected = True
+    >>> browser.getControl(name="form.button.Add").click()
+    >>> browser.getControl(name="title").value = "Test Collection"
+    >>> browser.getControl(name="addindex").value = ["portal_type"]
+    >>> browser.getControl('Add').click()
+    >>> browser.getControl(name="addoperator").value = ['plone.app.querystring.operation.selection.is']
+    >>> browser.getControl('Add').click()
+    >>> browser.getControl(name='query.v:records:list').value = ['Document']
+    >>> browser.getControl(name="form.button.save").click()
+    >>> browser.url == portal_url + "/test-collection/"
     True
 
 Now open the portlet manager for the site.
 
-    >>> b.open(portal_url + '/@@manage-portlets')
+    >>> browser.open(portal_url + '/@@manage-portlets')
 
 Use the 'Add portlet' select box to add a collection portlet.
 
-    >>> leftcolumn_form = b.getForm(action=portal_url, index=1)
+    >>> leftcolumn_form = browser.getForm(action=portal_url, index=1)
     >>> add_portlet_select = leftcolumn_form.getControl(name=":action", index=0)
     >>> val = "/++contextportlets++plone.leftcolumn/+/plone.portlet.collection.Collection"
     >>> add_portlet_select.getControl(value=val).selected = True
     >>> leftcolumn_form.submit()
     >>> import re  # '\s' is white space, '+' is at least one, '*' is zero or more matches.
-    >>> re.search('<h1\s+class="documentFirstHeading"\s*>\s*Add Collection Portlet\s*</h1>', b.contents) is not None
+    >>> re.search('<h1\s+class="documentFirstHeading"\s*>\s*Add Collection Portlet\s*</h1>', browser.contents) is not None
     True
 
 Use your new collection for testing. It should already be available at the root
 of the site. Show only two items to make the test sanely terse.
 
-    >>> b.getControl(name="form.target_collection").getControl(value="/test-collection").selected = True
-    >>> b.getControl(name="form.target_collection.update").click()
-    >>> b.getControl(name="form.header").value = "Test Collection"
-    >>> b.getControl(label="Limit").value = "2"
-    >>> b.getControl(name="form.actions.save").click()
-    >>> b.url == portal_url + "/@@manage-portlets"
+    >>> browser.getControl(name="form.target_collection").getControl(value="/test-collection").selected = True
+    >>> browser.getControl(name="form.target_collection.update").click()
+    >>> browser.getControl(name="form.header").value = "Test Collection"
+    >>> browser.getControl(label="Limit").value = "2"
+    >>> browser.getControl(name="form.actions.save").click()
+    >>> browser.url == portal_url + "/@@manage-portlets"
     True
 
 Go to the home page and see if the portlet looks OK.
 
-    >>> b.open(portal_url)
+    >>> browser.open(portal_url)
     >>> import re
-    >>> match = re.search('<dl class="portlet portletCollection.*?</dl>', b.contents, flags=re.DOTALL)
+    >>> match = re.search('<dl class="portlet portletCollection.*?</dl>', browser.contents, flags=re.DOTALL)
     >>> portlet_contents = match.group()
     >>> def strip_white_space(contents):
     ...     lines = [line.strip() for line in contents.splitlines() if line.strip()]
@@ -114,8 +82,11 @@ Go to the home page and see if the portlet looks OK.
     </a>
     <span class="portletTopRight"></span>
     </dt>
-    <dd class="portletItem odd">...</dd>
-    <dd class="portletItem even">...</dd>
+    <dd class="portletItem odd">
+    <a href="http://nohost/plone/test-document" class="tile contenttype-document" title="">
+    Test Document
+    </a>
+    </dd>
     <dd class="portletFooter">
     <span class="portletBottomLeft"></span>
     <span>
@@ -130,19 +101,19 @@ Go to the home page and see if the portlet looks OK.
 
 Now test what happens if we toggle the "show more link" option.
 
-    >>> b.open(portal_url + '/@@manage-portlets')
-    >>> b.getLink(url="http://nohost/plone/++contextportlets++plone.leftcolumn/test-collection/edit?referer=http%3A//nohost/plone/%40%40manage-portlets").click()
-    >>> re.search('<h1\s+class="documentFirstHeading"\s*>\s*Edit Collection Portlet\s*</h1>', b.contents) is not None
+    >>> browser.open(portal_url + '/@@manage-portlets')
+    >>> browser.getLink(url="http://nohost/plone/++contextportlets++plone.leftcolumn/test-collection/edit?referer=http%3A//nohost/plone/%40%40manage-portlets").click()
+    >>> re.search('<h1\s+class="documentFirstHeading"\s*>\s*Edit Collection Portlet\s*</h1>', browser.contents) is not None
     True
-    >>> b.getControl(label="Show more... link").selected = False
-    >>> b.getControl(name="form.actions.save").click()
-    >>> print b.url
+    >>> browser.getControl(label="Show more... link").selected = False
+    >>> browser.getControl(name="form.actions.save").click()
+    >>> print browser.url
     http://nohost/plone/@@manage-portlets
 
 Go back to the home page and see if it looks OK.
 
-    >>> b.open(portal_url)
-    >>> match = re.search('<dl class="portlet portletCollection.*?</dl>', b.contents, flags=re.DOTALL)
+    >>> browser.open(portal_url)
+    >>> match = re.search('<dl class="portlet portletCollection.*?</dl>', browser.contents, flags=re.DOTALL)
     >>> portlet_contents = match.group()
     >>> print strip_white_space(portlet_contents)
     <dl class="portlet portletCollection portlet-collection-test-collection">
@@ -151,8 +122,11 @@ Go back to the home page and see if it looks OK.
     <span>Test Collection</span>
     <span class="portletTopRight"></span>
     </dt>
-    <dd class="portletItem odd">...</dd>
-    <dd class="portletItem even">...</dd>
+    <dd class="portletItem odd">
+    <a href="http://nohost/plone/test-document" class="tile contenttype-document" title="">
+    Test Document
+    </a>
+    </dd>
     <dd class="portletFooter">
     <span class="portletBottomLeft"></span>
     <span class="portletBottomRight"></span>

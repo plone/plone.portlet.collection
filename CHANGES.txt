@@ -4,6 +4,13 @@ Changelog
 2.1.5 (unreleased)
 ------------------
 
+- Migrate all tests to use the new Collection type instead of the old Topic
+  type.
+  [timo]
+
+- Migrate all tests to plone.app.testing.
+  [timo]
+
 - Fix Archetypes brain rendering. This fixes http://dev.plone.org/ticket/13518.
   [timo]
 
