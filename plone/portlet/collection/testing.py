@@ -8,8 +8,6 @@ from plone.app.testing import TEST_USER_ID
 from plone.app.testing import setRoles
 from plone.app.testing import login
 
-from plone.testing import z2
-
 from zope.configuration import xmlconfig
 
 
