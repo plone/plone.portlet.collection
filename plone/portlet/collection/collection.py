@@ -1,25 +1,33 @@
+from ComputedAttribute import ComputedAttribute
+from plone.app.portlets.browser import formhelper
+from plone.app.portlets.portlets import base
+from plone.app.uuid.utils import uuidToObject
+from plone.app.vocabularies.catalog import CatalogSource
+from plone.i18n.normalizer.interfaces import IIDNormalizer
+from plone.memoize.instance import memoize
+from plone.portlet.collection import PloneMessageFactory as _
+from plone.portlets.interfaces import IPortletDataProvider
+from Products.CMFCore.utils import getToolByName
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from zExceptions import NotFound
+from zope import schema
+from zope.component import getUtility
+from zope.interface import implements
 import random
 
-from AccessControl import getSecurityManager
+COLLECTIONS = []
 
-from zope.interface import implements
-from zope.component import getMultiAdapter, getUtility
+try:
+    from plone.app.collection.interfaces import ICollection
+    COLLECTIONS.append(ICollection.__identifier__)
+except ImportError:
+    pass
 
-from plone.portlets.interfaces import IPortletDataProvider
-from plone.app.portlets.portlets import base
-
-from zope import schema
-from zope.formlib import form
-
-from plone.memoize.instance import memoize
-
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from plone.app.vocabularies.catalog import SearchableTextSourceBinder
-from plone.app.form.widgets.uberselectionwidget import UberSelectionWidget
-
-from plone.i18n.normalizer.interfaces import IIDNormalizer
-
-from plone.portlet.collection import PloneMessageFactory as _
+try:
+    from plone.app.contenttypes.interfaces import ICollection
+    COLLECTIONS.append(ICollection.__identifier__)
+except ImportError:
+    pass
 
 
 class ICollectionPortlet(IPortletDataProvider):
@@ -31,13 +39,12 @@ class ICollectionPortlet(IPortletDataProvider):
         description=_(u"Title of the rendered portlet"),
         required=True)
 
-    target_collection = schema.Choice(
+    uid = schema.Choice(
         title=_(u"Target collection"),
         description=_(u"Find the collection which provides the items to list"),
         required=True,
-        source=SearchableTextSourceBinder(
-            {'portal_type': ('Topic', 'Collection')},
-            default_query='path:'))
+        source=CatalogSource(portal_type=('Topic', 'Collection')),
+        )
 
     limit = schema.Int(
         title=_(u"Limit"),
@@ -78,16 +85,18 @@ class Assignment(base.Assignment):
     implements(ICollectionPortlet)
 
     header = u""
-    target_collection = None
     limit = None
     random = False
     show_more = True
     show_dates = False
 
-    def __init__(self, header=u"", target_collection=None, limit=None,
+    # bbb
+    target_collection = None
+
+    def __init__(self, header=u"", uid=None, limit=None,
                  random=False, show_more=True, show_dates=False):
         self.header = header
-        self.target_collection = target_collection
+        self.uid = uid
         self.limit = limit
         self.random = random
         self.show_more = show_more
@@ -99,6 +108,19 @@ class Assignment(base.Assignment):
         "manage portlets" screen. Here, we use the title that the user gave.
         """
         return self.header
+
+    def _uid(self):
+        # This is only called if the instance doesn't have a uid
+        # attribute, which is probably because it has an old
+        # 'target_collection' attribute that needs to be converted.
+        path = self.target_collection
+        portal = getToolByName(self, 'portal_url').getPortalObject()
+        try:
+            collection = portal.unrestrictedTraverse(path.lstrip('/'))
+        except (AttributeError, KeyError, TypeError, NotFound):
+            return
+        return collection.UID()
+    uid = ComputedAttribute(_uid, 1)
 
 
 class Renderer(base.Renderer):
@@ -165,45 +187,20 @@ class Renderer(base.Renderer):
 
     @memoize
     def collection(self):
-        collection_path = self.data.target_collection
-        if not collection_path:
-            return None
+        return uuidToObject(self.data.uid)
 
-        if collection_path.startswith('/'):
-            collection_path = collection_path[1:]
-
-        if not collection_path:
-            return None
-
-        portal_state = getMultiAdapter((self.context, self.request),
-                                       name=u'plone_portal_state')
-        portal = portal_state.portal()
-        if isinstance(collection_path, unicode):
-            # restrictedTraverse accepts only strings
-            collection_path = str(collection_path)
-
-        result = portal.unrestrictedTraverse(collection_path, default=None)
-        if result is not None:
-            sm = getSecurityManager()
-            if not sm.checkPermission('View', result):
-                result = None
-        return result
-        
     def include_empty_footer(self):
         """
-        Whether or not to include an empty footer element when the more 
+        Whether or not to include an empty footer element when the more
         link is turned off.
-        Always returns True (this method provides a hook for 
+        Always returns True (this method provides a hook for
         sub-classes to override the default behaviour).
         """
         return True
 
 
-class AddForm(base.AddForm):
-
-    form_fields = form.Fields(ICollectionPortlet)
-    form_fields['target_collection'].custom_widget = UberSelectionWidget
-
+class AddForm(formhelper.AddForm):
+    schema = ICollectionPortlet
     label = _(u"Add Collection Portlet")
     description = _(u"This portlet displays a listing of items from a "
                     u"Collection.")
@@ -212,11 +209,8 @@ class AddForm(base.AddForm):
         return Assignment(**data)
 
 
-class EditForm(base.EditForm):
-
-    form_fields = form.Fields(ICollectionPortlet)
-    form_fields['target_collection'].custom_widget = UberSelectionWidget
-
+class EditForm(formhelper.EditForm):
+    schema = ICollectionPortlet
     label = _(u"Edit Collection Portlet")
     description = _(u"This portlet displays a listing of items from a "
                     u"Collection.")

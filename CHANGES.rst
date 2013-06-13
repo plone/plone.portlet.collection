@@ -1,8 +1,11 @@
 Changelog
 =========
 
-2.2.2 (unreleased)
---------------
+3.0 (unreleased)
+----------------
+
+- Use z3c.form for portlet forms.
+  [bosim, davisagli]
 
 - Provide a hook to facilitate overrides that do not include an empty 
   footer when the more link is turned off.

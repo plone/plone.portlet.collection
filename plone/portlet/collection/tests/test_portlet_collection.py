@@ -109,19 +109,6 @@ class TestRenderer(unittest.TestCase):
         output = r.render()
         self.assertTrue('title' in output)
 
-    def test_collection_path_unicode(self):
-        self.portal.invokeFactory('Collection', 'events')
-        # Cover problem in #9184
-        renderer = self.renderer(
-            context=self.portal,
-            assignment=collection.Assignment(
-                header=u"title",
-                target_collection=u"/events"
-            )
-        )
-        renderer = renderer.__of__(self.folder)
-        self.assertEqual(renderer.collection().id, 'events')
-
     def test_css_class(self):
         r = self.renderer(
             context=self.portal,
@@ -180,7 +167,7 @@ class TestCollectionQuery(unittest.TestCase):
         mapping = PortletAssignmentMapping()
         mapping['foo'] = collection.Assignment(
             header=u"title",
-            target_collection='/folder/private/public/collection'
+            uid=self.portal.folder.private.public.collection.UID()
         )
         logout()
         collectionrenderer = self.renderer(
@@ -211,7 +198,7 @@ class TestCollectionQuery(unittest.TestCase):
         mapping = PortletAssignmentMapping()
         mapping['foo'] = collection.Assignment(
             header=u"title",
-            target_collection='/folder/collection'
+            uid=self.folder.collection.UID()
         )
         collectionrenderer = self.renderer(
             context=None,
@@ -230,7 +217,7 @@ class TestCollectionQuery(unittest.TestCase):
         mapping['foo'] = collection.Assignment(
             header=u"title",
             random=True,
-            target_collection='/folder/collection'
+            uid=self.folder.collection.UID()
         )
         # add some folders
         for i in range(6):

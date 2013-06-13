@@ -53,11 +53,10 @@ Use the 'Add portlet' select box to add a collection portlet.
 Use your new collection for testing. It should already be available at the root
 of the site. Show only two items to make the test sanely terse.
 
-    >>> browser.getControl(name="form.target_collection").getControl(value="/test-collection").selected = ['True']
-    >>> browser.getControl(name="form.target_collection.update").click()
-    >>> browser.getControl(name="form.header").value = "Test Collection"
-    >>> browser.getControl(label="Limit").value = "2"
-    >>> browser.getControl(name="form.actions.save").click()
+    >>> browser.getControl(name='form.widgets.uid').value = portal['test-collection'].UID()
+    >>> browser.getControl('Portlet header').value = "Test Collection"
+    >>> browser.getControl('Limit').value = "2"
+    >>> browser.getControl('Save').click()
     >>> browser.url == portal_url + "/@@manage-portlets"
     True
 
@@ -102,7 +101,7 @@ Now test what happens if we toggle the "show more link" option.
     >>> re.search('<h1\s+class="documentFirstHeading"\s*>\s*Edit Collection Portlet\s*</h1>', browser.contents) is not None
     True
     >>> browser.getControl(label="Show more... link").selected = False
-    >>> browser.getControl(name="form.actions.save").click()
+    >>> browser.getControl('Save').click()
     >>> print browser.url
     http://nohost/plone/@@manage-portlets
 
