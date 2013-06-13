@@ -7,19 +7,22 @@ from zope.component import getMultiAdapter, getUtility
 
 from plone.portlets.interfaces import IPortletDataProvider
 from plone.app.portlets.portlets import base
+from plone.app.portlets.browser import z3cformhelper
 
 from zope import schema
 from zope.formlib import form
 
+from z3c.form import field
+from z3c.relationfield.schema import RelationChoice
+
 from plone.memoize.instance import memoize
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from plone.app.vocabularies.catalog import SearchableTextSourceBinder
-from plone.app.form.widgets.uberselectionwidget import UberSelectionWidget
-
 from plone.i18n.normalizer.interfaces import IIDNormalizer
 
+from plone.app.collection.interfaces import ICollection
 from plone.portlet.collection import PloneMessageFactory as _
+from plone.formwidget.contenttree import ObjPathSourceBinder
 
 
 class ICollectionPortlet(IPortletDataProvider):
@@ -31,13 +34,14 @@ class ICollectionPortlet(IPortletDataProvider):
         description=_(u"Title of the rendered portlet"),
         required=True)
 
-    target_collection = schema.Choice(
+    target_collection = RelationChoice(
         title=_(u"Target collection"),
         description=_(u"Find the collection which provides the items to list"),
         required=True,
-        source=SearchableTextSourceBinder(
-            {'portal_type': ('Topic', 'Collection')},
-            default_query='path:'))
+        source=ObjPathSourceBinder(
+            object_provides=ICollection.__identifier__
+        ),
+    )
 
     limit = schema.Int(
         title=_(u"Limit"),
@@ -169,20 +173,7 @@ class Renderer(base.Renderer):
         if not collection_path:
             return None
 
-        if collection_path.startswith('/'):
-            collection_path = collection_path[1:]
-
-        if not collection_path:
-            return None
-
-        portal_state = getMultiAdapter((self.context, self.request),
-                                       name=u'plone_portal_state')
-        portal = portal_state.portal()
-        if isinstance(collection_path, unicode):
-            # restrictedTraverse accepts only strings
-            collection_path = str(collection_path)
-
-        result = portal.unrestrictedTraverse(collection_path, default=None)
+        result = self.data.target_collection.to_object
         if result is not None:
             sm = getSecurityManager()
             if not sm.checkPermission('View', result):
@@ -190,10 +181,9 @@ class Renderer(base.Renderer):
         return result
 
 
-class AddForm(base.AddForm):
+class AddForm(z3cformhelper.AddForm):
 
-    form_fields = form.Fields(ICollectionPortlet)
-    form_fields['target_collection'].custom_widget = UberSelectionWidget
+    fields = field.Fields(ICollectionPortlet)
 
     label = _(u"Add Collection Portlet")
     description = _(u"This portlet displays a listing of items from a "
@@ -203,10 +193,9 @@ class AddForm(base.AddForm):
         return Assignment(**data)
 
 
-class EditForm(base.EditForm):
+class EditForm(z3cformhelper.EditForm):
 
-    form_fields = form.Fields(ICollectionPortlet)
-    form_fields['target_collection'].custom_widget = UberSelectionWidget
+    fields = field.Fields(ICollectionPortlet)
 
     label = _(u"Edit Collection Portlet")
     description = _(u"This portlet displays a listing of items from a "
