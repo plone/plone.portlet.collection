@@ -24,10 +24,7 @@ Set up testbrowser::
 Create a collection for testing purposes. Just make it a collection of
 everything.
 
-    >>> browser.open(portal_url)
-    >>> browser.getLink(url=portal_url + "/folder_factories").click()
-    >>> browser.getControl(label="Collection").selected = True
-    >>> browser.getControl(name="form.button.Add").click()
+    >>> browser.open(portal_url + '/createObject?type_name=Collection')
     >>> browser.getControl(name="title").value = "Test Collection"
     >>> browser.getControl(name="addindex").value = ["portal_type"]
     >>> browser.getControl('Add').click()
