@@ -3,14 +3,13 @@ import random
 from AccessControl import getSecurityManager
 
 from zope.interface import implements
-from zope.component import getMultiAdapter, getUtility
+from zope.component import getUtility
 
 from plone.portlets.interfaces import IPortletDataProvider
 from plone.app.portlets.portlets import base
 from plone.app.portlets.browser import z3cformhelper
 
 from zope import schema
-from zope.formlib import form
 
 from z3c.form import field
 from z3c.relationfield.schema import RelationChoice
