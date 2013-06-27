@@ -20,9 +20,23 @@ from plone.memoize.instance import memoize
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.i18n.normalizer.interfaces import IIDNormalizer
 
-from plone.app.collection.interfaces import ICollection
+
 from plone.portlet.collection import PloneMessageFactory as _
 from plone.formwidget.contenttree import ObjPathSourceBinder
+
+COLLECTIONS = []
+
+try:
+    from plone.app.collection.interfaces import ICollection
+    COLLECTIONS.append(ICollection.__identifier__)
+except ImportError:
+    pass
+
+try:
+    from plone.app.contenttypes.interfaces import ICollection
+    COLLECTIONS.append(ICollection.__identifier__)
+except ImportError:
+    pass
 
 
 class ICollectionPortlet(IPortletDataProvider):
@@ -39,7 +53,7 @@ class ICollectionPortlet(IPortletDataProvider):
         description=_(u"Find the collection which provides the items to list"),
         required=True,
         source=ObjPathSourceBinder(
-            object_provides=ICollection.__identifier__
+            object_provides=COLLECTIONS
         ),
     )
 
