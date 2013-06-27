@@ -187,6 +187,8 @@ class Renderer(base.Renderer):
         if not collection_path:
             return None
 
+        if not hasattr(self.data.target_collection, "to_object"):
+            return None
         result = self.data.target_collection.to_object
         if result is not None:
             sm = getSecurityManager()
