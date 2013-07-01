@@ -3,14 +3,13 @@ import random
 from AccessControl import getSecurityManager
 
 from zope.interface import implements
-from zope.component import getMultiAdapter, getUtility
+from zope.component import getUtility
 
 from plone.portlets.interfaces import IPortletDataProvider
 from plone.app.portlets.portlets import base
 from plone.app.portlets.browser import z3cformhelper
 
 from zope import schema
-from zope.formlib import form
 
 from z3c.form import field
 from z3c.relationfield.schema import RelationChoice
@@ -20,9 +19,23 @@ from plone.memoize.instance import memoize
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.i18n.normalizer.interfaces import IIDNormalizer
 
-from plone.app.collection.interfaces import ICollection
+
 from plone.portlet.collection import PloneMessageFactory as _
 from plone.formwidget.contenttree import ObjPathSourceBinder
+
+COLLECTIONS = []
+
+try:
+    from plone.app.collection.interfaces import ICollection
+    COLLECTIONS.append(ICollection.__identifier__)
+except ImportError:
+    pass
+
+try:
+    from plone.app.contenttypes.interfaces import ICollection
+    COLLECTIONS.append(ICollection.__identifier__)
+except ImportError:
+    pass
 
 
 class ICollectionPortlet(IPortletDataProvider):
@@ -39,7 +52,7 @@ class ICollectionPortlet(IPortletDataProvider):
         description=_(u"Find the collection which provides the items to list"),
         required=True,
         source=ObjPathSourceBinder(
-            object_provides=ICollection.__identifier__
+            object_provides=COLLECTIONS
         ),
     )
 
@@ -173,6 +186,8 @@ class Renderer(base.Renderer):
         if not self.data.target_collection or not hasattr(self.data.target_collection, 'to_object'):
             return None
 
+        if not hasattr(self.data.target_collection, "to_object"):
+            return None
         result = self.data.target_collection.to_object
         if result is not None:
             sm = getSecurityManager()
