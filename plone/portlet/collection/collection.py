@@ -169,8 +169,8 @@ class Renderer(base.Renderer):
 
     @memoize
     def collection(self):
-        collection_path = self.data.target_collection
-        if not collection_path:
+
+        if not self.data.target_collection or not hasattr(self.data.target_collection, 'to_object'):
             return None
 
         result = self.data.target_collection.to_object
