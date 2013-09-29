@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '2.1.5'
+version = '2.2.0dev'
 
 setup(name='plone.portlet.collection',
       version=version,
