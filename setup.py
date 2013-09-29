@@ -35,6 +35,7 @@ setup(name='plone.portlet.collection',
       extras_require={
           'test': [
               'plone.app.testing',
+              'plone.app.contenttypes',
           ],
       }
       )
