@@ -4,6 +4,9 @@ Changelog
 2.2.0 (unreleased)
 ------------------
 
+- Replace deprecated test assert statements.
+  [timo]
+
 - Use PLONE_APP_CONTENTTYPES_FIXTURE as test layer for Plone 5 compatibility.
   [timo]
 

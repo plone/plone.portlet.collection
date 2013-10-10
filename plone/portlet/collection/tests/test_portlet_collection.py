@@ -33,13 +33,13 @@ class TestPortlet(unittest.TestCase):
     def testPortletTypeRegistered(self):
         portlet = getUtility(
             IPortletType, name='plone.portlet.collection.Collection')
-        self.assertEquals(
+        self.assertEqual(
             portlet.addview, 'plone.portlet.collection.Collection')
 
     def testInterfaces(self):
         portlet = collection.Assignment(header=u"title")
-        self.failUnless(IPortletAssignment.providedBy(portlet))
-        self.failUnless(IPortletDataProvider.providedBy(portlet.data))
+        self.assertTrue(IPortletAssignment.providedBy(portlet))
+        self.assertTrue(IPortletDataProvider.providedBy(portlet.data))
 
     def testInvokeAddview(self):
         portlet = getUtility(
@@ -50,15 +50,15 @@ class TestPortlet(unittest.TestCase):
             del mapping[m]
         addview = mapping.restrictedTraverse('+/' + portlet.addview)
         addview.createAndAdd(data={'header': u"test title"})
-        self.assertEquals(len(mapping), 1)
-        self.failUnless(isinstance(mapping.values()[0], collection.Assignment))
+        self.assertEqual(len(mapping), 1)
+        self.assertTrue(isinstance(mapping.values()[0], collection.Assignment))
 
     def testInvokeEditView(self):
         mapping = PortletAssignmentMapping()
         request = self.folder.REQUEST
         mapping['foo'] = collection.Assignment(header=u"title")
         editview = getMultiAdapter((mapping['foo'], request), name='edit')
-        self.failUnless(isinstance(editview, collection.EditForm))
+        self.assertTrue(isinstance(editview, collection.EditForm))
 
     def testRenderer(self):
         context = self.folder
@@ -70,7 +70,7 @@ class TestPortlet(unittest.TestCase):
 
         renderer = getMultiAdapter((
             context, request, view, manager, assignment), IPortletRenderer)
-        self.failUnless(isinstance(renderer, collection.Renderer))
+        self.assertTrue(isinstance(renderer, collection.Renderer))
 
 
 class TestRenderer(unittest.TestCase):
@@ -127,7 +127,7 @@ class TestRenderer(unittest.TestCase):
             context=self.portal,
             assignment=collection.Assignment(header=u"Welcome text")
         )
-        self.assertEquals('portlet-collection-welcome-text', r.css_class())
+        self.assertEqual('portlet-collection-welcome-text', r.css_class())
 
 
 class TestCollectionQuery(unittest.TestCase):
@@ -188,7 +188,7 @@ class TestCollectionQuery(unittest.TestCase):
             assignment=mapping['foo']
         )
 
-        self.assertEquals(self.collection, collectionrenderer.collection())
+        self.assertEqual(self.collection, collectionrenderer.collection())
 
     def testSimpleQuery(self):
         # set up our collection to search for Folders
@@ -206,7 +206,7 @@ class TestCollectionQuery(unittest.TestCase):
         # the folders are returned by the topic
         collection_num_items = len(self.folder.collection.results())
         # We better have some folders
-        self.failUnless(collection_num_items >= 6)
+        self.assertTrue(collection_num_items >= 6)
 
         mapping = PortletAssignmentMapping()
         mapping['foo'] = collection.Assignment(
@@ -318,4 +318,4 @@ class TestCollectionQuery(unittest.TestCase):
             assignment=mapping['foo']
         )
         collectionrenderer.data.limit = 10
-        self.failUnless(len(collectionrenderer.results()) >= 6)
+        self.assertTrue(len(collectionrenderer.results()) >= 6)
