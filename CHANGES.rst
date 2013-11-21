@@ -4,6 +4,10 @@ Changelog
 2.2.0 (unreleased)
 ------------------
 
+- plone.portlet.collection should also install plone.app.querystring:default
+  profile
+  [garbas]
+
 - Replace deprecated test assert statements.
   [timo]
 
