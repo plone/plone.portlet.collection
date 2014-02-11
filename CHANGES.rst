@@ -47,6 +47,10 @@ Changelog
 2.2.0 (2014-02-22)
 ------------------
 
+- Remove DL's from portlet templates.
+  https://github.com/plone/Products.CMFPlone/issues/163
+  [khink]
+
 - plone.portlet.collection should also install plone.app.querystring:default
   profile
   [garbas]

@@ -1,19 +1,21 @@
-<dl class="portlet portletCollection"
+<section class="portlet portletCollection"
     i18n:domain="plone"
     tal:define="collection_url view/collection_url;
                 plone_view context/@@plone;
                 toLocalizedTime nocall:plone_view/toLocalizedTime;
                 viewActions here/portal_properties/site_properties/typesUseViewActionInListings|python:();"
-    tal:attributes="class string:portlet portletCollection ${view/css_class}"><dt class="portletHeader">
+    tal:attributes="class string:portlet portletCollection ${view/css_class}"><header class="portletHeader">
         <span class="portletTopLeft"></span>
         <a tal:attributes="href collection_url" tal:omit-tag="not:view/data/show_more">
             <span tal:content="view/data/header" />
         </a>
         <span class="portletTopRight"></span>
-    </dt>
+  </header>
 
+
+  <ul class="portletContent">
     <tal:events tal:repeat="obj view/results">
-    <dd class="portletItem"
+    <li class="portletItem"
         tal:define="oddrow repeat/obj/odd;
                     useView python:obj.portal_type in viewActions;
                     itemUrl python:useView and obj.getURL() + '/view' or obj.getURL();
@@ -32,10 +34,11 @@
                 Date
             </span>
         </a>
-    </dd>
+    </li>
     </tal:events>
+  </ul>
 
-    <dd class="portletFooter"
+    <footer class="portletFooter"
             tal:condition="python:showMore or view.include_empty_footer()"
             tal:define="showMore view/data/show_more">
         <span class="portletBottomLeft"></span>
@@ -46,6 +49,6 @@
         </a>
         </span>
         <span class="portletBottomRight"></span>
-    </dd>
+  </footer>
 
-</dl>
+</section>
