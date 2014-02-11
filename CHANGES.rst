@@ -1,6 +1,20 @@
 Changelog
 =========
 
+2.2.0 (unreleased)
+------------------
+
+- plone.portlet.collection should also install plone.app.querystring:default
+  profile
+  [garbas]
+
+- Replace deprecated test assert statements.
+  [timo]
+
+- Use PLONE_APP_CONTENTTYPES_FIXTURE as test layer for Plone 5 compatibility.
+  [timo]
+
+
 2.1.5 (2013-04-29)
 ------------------
 

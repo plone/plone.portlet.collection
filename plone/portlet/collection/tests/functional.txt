@@ -16,27 +16,24 @@ Set up testbrowser::
     >>> browser.getLink(url=portal_url + "/folder_factories").click()
     >>> browser.getControl(label="Page").selected = True
     >>> browser.getControl(name="form.button.Add").click()
-    >>> browser.getControl(name="title").value = "Test Document"
-    >>> browser.getControl(name="form.button.save").click()
-    >>> 'Changes saved' in browser.contents
+    >>> browser.getControl(name="form.widgets.IDublinCore.title").value = "Test Document"
+    >>> browser.getControl("Save").click()
+    >>> 'Item created' in browser.contents
     True
 
 Create a collection for testing purposes. Just make it a collection of
 everything.
 
-    >>> browser.open(portal_url)
-    >>> browser.getLink(url=portal_url + "/folder_factories").click()
-    >>> browser.getControl(label="Collection").selected = True
-    >>> browser.getControl(name="form.button.Add").click()
-    >>> browser.getControl(name="title").value = "Test Collection"
-    >>> browser.getControl(name="addindex").value = ["portal_type"]
-    >>> browser.getControl('Add').click()
-    >>> browser.getControl(name="addoperator").value = ['plone.app.querystring.operation.selection.is']
-    >>> browser.getControl('Add').click()
-    >>> browser.getControl(name='query.v:records:list').value = ['Document']
-    >>> browser.getControl(name="form.button.save").click()
-    >>> browser.url == portal_url + "/test-collection/"
-    True
+
+    >>> portal.invokeFactory("Collection", "test-collection")
+    'test-collection'
+    >>> portal['test-collection'].setQuery([{
+    ...      'i': 'portal_type',
+    ...      'o': 'plone.app.querystring.operation.string.is',
+    ...      'v': 'Document',
+    ... }])
+    >>> import transaction
+    >>> transaction.commit()
 
 Now open the portlet manager for the site.
 
@@ -56,7 +53,7 @@ Use the 'Add portlet' select box to add a collection portlet.
 Use your new collection for testing. It should already be available at the root
 of the site. Show only two items to make the test sanely terse.
 
-    >>> browser.getControl(name="form.target_collection").getControl(value="/test-collection").selected = True
+    >>> browser.getControl(name="form.target_collection").getControl(value="/test-collection").selected = ['True']
     >>> browser.getControl(name="form.target_collection.update").click()
     >>> browser.getControl(name="form.header").value = "Test Collection"
     >>> browser.getControl(label="Limit").value = "2"

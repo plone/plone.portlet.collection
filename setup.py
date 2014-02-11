@@ -1,12 +1,12 @@
 from setuptools import setup, find_packages
 
-version = '2.1.5'
+version = '2.2.0dev'
 
 setup(name='plone.portlet.collection',
       version=version,
       description="A portlet that fetches results from a collection",
-      long_description=open("README.txt").read() + "\n" +
-      open("CHANGES.txt").read(),
+      long_description=open("README.rst").read() + "\n" +
+      open("CHANGES.rst").read(),
       classifiers=[
           "Environment :: Web Environment",
           "Framework :: Plone",
@@ -35,6 +35,7 @@ setup(name='plone.portlet.collection',
       extras_require={
           'test': [
               'plone.app.testing',
+              'plone.app.contenttypes',
           ],
       }
       )
