@@ -7,7 +7,7 @@ from zope.component import getUtility
 
 from plone.portlets.interfaces import IPortletDataProvider
 from plone.app.portlets.portlets import base
-from plone.app.portlets.browser import z3cformhelper
+from plone.app.portlets.browser import formhelper
 
 from zope import schema
 
@@ -183,11 +183,10 @@ class Renderer(base.Renderer):
     @memoize
     def collection(self):
 
-        if not self.data.target_collection or not hasattr(self.data.target_collection, 'to_object'):
+        if not self.data.target_collection or \
+           not hasattr(self.data.target_collection, 'to_object'):
             return None
 
-        if not hasattr(self.data.target_collection, "to_object"):
-            return None
         result = self.data.target_collection.to_object
         if result is not None:
             sm = getSecurityManager()
@@ -196,7 +195,7 @@ class Renderer(base.Renderer):
         return result
 
 
-class AddForm(z3cformhelper.AddForm):
+class AddForm(formhelper.AddForm):
 
     fields = field.Fields(ICollectionPortlet)
 
@@ -208,7 +207,7 @@ class AddForm(z3cformhelper.AddForm):
         return Assignment(**data)
 
 
-class EditForm(z3cformhelper.EditForm):
+class EditForm(formhelper.EditForm):
 
     fields = field.Fields(ICollectionPortlet)
 
