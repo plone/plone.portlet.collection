@@ -1,3 +1,5 @@
+from five.intid.intid import IntIds
+from five.intid.site import addUtility
 from plone.app.portlets.storage import PortletAssignmentMapping
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import setRoles
@@ -9,6 +11,9 @@ from plone.portlets.interfaces import IPortletDataProvider
 from plone.portlets.interfaces import IPortletRenderer
 from Products.CMFCore.utils import getToolByName
 from zope.component import getUtility, getMultiAdapter
+from zope.component import getSiteManager
+from zope.intid.interfaces import IIntIds
+from z3c.relationfield.relation import create_relation
 
 from plone.portlet.collection import collection
 from plone.portlet.collection.testing import (
@@ -29,6 +34,8 @@ class TestPortlet(unittest.TestCase):
         setRoles(self.portal, TEST_USER_ID, ['Manager'])
         self.portal.invokeFactory('Folder', 'folder')
         self.folder = self.portal.folder
+        sm = getSiteManager(self.portal)
+        addUtility(sm, IIntIds, IntIds, ofs_name='intids', findroot=False)
 
     def testPortletTypeRegistered(self):
         portlet = getUtility(
@@ -84,6 +91,8 @@ class TestRenderer(unittest.TestCase):
         setRoles(self.portal, TEST_USER_ID, ['Manager'])
         self.portal.invokeFactory('Folder', 'folder')
         self.folder = self.portal.folder
+        sm = getSiteManager(self.portal)
+        addUtility(sm, IIntIds, IntIds, ofs_name='intids', findroot=False)
 
     def renderer(self, context=None, request=None, view=None, manager=None,
                  assignment=None):
@@ -108,19 +117,6 @@ class TestRenderer(unittest.TestCase):
         r.update()
         output = r.render()
         self.assertTrue('title' in output)
-
-    def test_collection_path_unicode(self):
-        self.portal.invokeFactory('Collection', 'events')
-        # Cover problem in #9184
-        renderer = self.renderer(
-            context=self.portal,
-            assignment=collection.Assignment(
-                header=u"title",
-                target_collection=u"/events"
-            )
-        )
-        renderer = renderer.__of__(self.folder)
-        self.assertEqual(renderer.collection().id, 'events')
 
     def test_css_class(self):
         r = self.renderer(
@@ -180,7 +176,7 @@ class TestCollectionQuery(unittest.TestCase):
         mapping = PortletAssignmentMapping()
         mapping['foo'] = collection.Assignment(
             header=u"title",
-            target_collection='/folder/private/public/collection'
+            target_collection=create_relation('/plone/folder/private/public/collection')
         )
         logout()
         collectionrenderer = self.renderer(
@@ -211,7 +207,7 @@ class TestCollectionQuery(unittest.TestCase):
         mapping = PortletAssignmentMapping()
         mapping['foo'] = collection.Assignment(
             header=u"title",
-            target_collection='/folder/collection'
+            target_collection=create_relation('/plone/folder/collection')
         )
         collectionrenderer = self.renderer(
             context=None,
@@ -230,7 +226,7 @@ class TestCollectionQuery(unittest.TestCase):
         mapping['foo'] = collection.Assignment(
             header=u"title",
             random=True,
-            target_collection='/folder/collection'
+            target_collection=create_relation('/plone/folder/collection')
         )
         # add some folders
         for i in range(6):
