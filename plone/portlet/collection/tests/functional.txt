@@ -89,7 +89,7 @@ Go to the home page and see if the portlet looks OK.
     <span>
     <a href="http://nohost/plone/test-collection">
     <span class="hiddenStructure">Test Collection - </span>
-    <span>More&hellip;</span>
+    <span>More...</span>
     </a>
     </span>
     <span class="portletBottomRight"></span>
