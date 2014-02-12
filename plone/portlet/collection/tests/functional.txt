@@ -112,8 +112,7 @@ Go back to the home page and see if it looks OK.
     >>> match = re.search('<dl class="portlet portletCollection.*?</dl>', browser.contents, flags=re.DOTALL)
     >>> portlet_contents = match.group()
     >>> print strip_white_space(portlet_contents)
-    <dl class="portlet portletCollection portlet-collection-test-collection">
-    <dt class="portletHeader">
+    <dl class="portlet portletCollection portlet-collection-test-collection"><dt class="portletHeader">
     <span class="portletTopLeft"></span>
     <span>Test Collection</span>
     <span class="portletTopRight"></span>
