@@ -71,8 +71,7 @@ Go to the home page and see if the portlet looks OK.
     ...     lines = [line.strip() for line in contents.splitlines() if line.strip()]
     ...     return '\n'.join(lines)
     >>> print strip_white_space(portlet_contents)
-    <dl class="portlet portletCollection portlet-collection-test-collection">
-    <dt class="portletHeader">
+    <dl class="portlet portletCollection portlet-collection-test-collection"><dt class="portletHeader">
     <span class="portletTopLeft"></span>
     <a href="http://nohost/plone/test-collection">
     <span>Test Collection</span>
