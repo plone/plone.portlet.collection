@@ -4,9 +4,7 @@
                 plone_view context/@@plone;
                 toLocalizedTime nocall:plone_view/toLocalizedTime;
                 viewActions here/portal_properties/site_properties/typesUseViewActionInListings|python:();"
-    tal:attributes="class string:portlet portletCollection ${view/css_class}">
-
-    <dt class="portletHeader">
+    tal:attributes="class string:portlet portletCollection ${view/css_class}"><dt class="portletHeader">
         <span class="portletTopLeft"></span>
         <a tal:attributes="href collection_url" tal:omit-tag="not:view/data/show_more">
             <span tal:content="view/data/header" />
