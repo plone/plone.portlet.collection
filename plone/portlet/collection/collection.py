@@ -21,7 +21,6 @@ from plone.i18n.normalizer.interfaces import IIDNormalizer
 
 
 from plone.portlet.collection import PloneMessageFactory as _
-from plone.formwidget.contenttree import ObjPathSourceBinder
 
 COLLECTIONS = []
 
@@ -51,9 +50,7 @@ class ICollectionPortlet(IPortletDataProvider):
         title=_(u"Target collection"),
         description=_(u"Find the collection which provides the items to list"),
         required=True,
-        source=ObjPathSourceBinder(
-            object_provides=COLLECTIONS
-        ),
+        vocabulary='plone.formwidget.relations.cmfcontentsearch'
     )
 
     limit = schema.Int(
