@@ -4,7 +4,8 @@ Changelog
 2.2.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Include *.rst files in releases.
+  [timo]
 
 
 2.2.0 (2014-02-22)
