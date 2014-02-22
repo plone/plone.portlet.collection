@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.2.0 (unreleased)
+2.2.0 (2014-02-22)
 ------------------
 
 - plone.portlet.collection should also install plone.app.querystring:default
