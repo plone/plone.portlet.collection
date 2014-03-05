@@ -188,6 +188,15 @@ class Renderer(base.Renderer):
             if not sm.checkPermission('View', result):
                 result = None
         return result
+        
+    def include_empty_footer(self):
+        """
+        Whether or not to include an empty footer element when the more 
+        link is turned off.
+        Always returns True (this method provides a hook for 
+        sub-classes to override the default behaviour).
+        """
+        return True
 
 
 class AddForm(base.AddForm):

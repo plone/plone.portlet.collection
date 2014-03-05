@@ -4,7 +4,9 @@ Changelog
 2.2.2 (unreleased)
 --------------
 
-- Nothing changed yet.
+- Provide a hook to facilitate overrides that do not include an empty 
+  footer when the more link is turned off.
+  [anthonygerrard]
 
 
 2.2.1 (2014-02-22)
