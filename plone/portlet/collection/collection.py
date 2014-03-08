@@ -1,26 +1,16 @@
-import random
-
 from AccessControl import getSecurityManager
-
-from zope.interface import implements
-from zope.component import getUtility
-
-from plone.portlets.interfaces import IPortletDataProvider
-from plone.app.portlets.portlets import base
 from plone.app.portlets.browser import formhelper
-
-from zope import schema
-
-from z3c.form import field
-from z3c.relationfield.schema import RelationChoice
-
-from plone.memoize.instance import memoize
-
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from plone.app.portlets.portlets import base
+from plone.app.vocabulary.catalog import CatalogSource
 from plone.i18n.normalizer.interfaces import IIDNormalizer
-
-
+from plone.memoize.instance import memoize
 from plone.portlet.collection import PloneMessageFactory as _
+from plone.portlets.interfaces import IPortletDataProvider
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from zope import schema
+from zope.component import getUtility
+from zope.interface import implements
+import random
 
 COLLECTIONS = []
 
@@ -46,12 +36,12 @@ class ICollectionPortlet(IPortletDataProvider):
         description=_(u"Title of the rendered portlet"),
         required=True)
 
-    target_collection = RelationChoice(
+    target_collection = schema.Choice(
         title=_(u"Target collection"),
         description=_(u"Find the collection which provides the items to list"),
         required=True,
-        vocabulary='plone.formwidget.relations.cmfcontentsearch'
-    )
+        source=CatalogSource(portal_type=('Topic', 'Collection')),
+        )
 
     limit = schema.Int(
         title=_(u"Limit"),
@@ -179,7 +169,6 @@ class Renderer(base.Renderer):
 
     @memoize
     def collection(self):
-
         if not self.data.target_collection or \
            not hasattr(self.data.target_collection, 'to_object'):
             return None
@@ -190,21 +179,19 @@ class Renderer(base.Renderer):
             if not sm.checkPermission('View', result):
                 result = None
         return result
-        
+
     def include_empty_footer(self):
         """
-        Whether or not to include an empty footer element when the more 
+        Whether or not to include an empty footer element when the more
         link is turned off.
-        Always returns True (this method provides a hook for 
+        Always returns True (this method provides a hook for
         sub-classes to override the default behaviour).
         """
         return True
 
 
 class AddForm(formhelper.AddForm):
-
-    fields = field.Fields(ICollectionPortlet)
-
+    schema = ICollectionPortlet
     label = _(u"Add Collection Portlet")
     description = _(u"This portlet displays a listing of items from a "
                     u"Collection.")
@@ -214,9 +201,7 @@ class AddForm(formhelper.AddForm):
 
 
 class EditForm(formhelper.EditForm):
-
-    fields = field.Fields(ICollectionPortlet)
-
+    schema = ICollectionPortlet
     label = _(u"Edit Collection Portlet")
     description = _(u"This portlet displays a listing of items from a "
                     u"Collection.")
