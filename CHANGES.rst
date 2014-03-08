@@ -1,7 +1,22 @@
 Changelog
 =========
 
-2.2.0 (unreleased)
+2.2.2 (unreleased)
+--------------
+
+- Provide a hook to facilitate overrides that do not include an empty 
+  footer when the more link is turned off.
+  [anthonygerrard]
+
+
+2.2.1 (2014-02-22)
+------------------
+
+- Include *.rst files in releases.
+  [timo]
+
+
+2.2.0 (2014-02-22)
 ------------------
 
 - plone.portlet.collection should also install plone.app.querystring:default
