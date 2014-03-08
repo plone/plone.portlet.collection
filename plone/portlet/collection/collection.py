@@ -1,7 +1,7 @@
 from AccessControl import getSecurityManager
 from plone.app.portlets.browser import formhelper
 from plone.app.portlets.portlets import base
-from plone.app.vocabulary.catalog import CatalogSource
+from plone.app.vocabularies.catalog import CatalogSource
 from plone.i18n.normalizer.interfaces import IIDNormalizer
 from plone.memoize.instance import memoize
 from plone.portlet.collection import PloneMessageFactory as _
