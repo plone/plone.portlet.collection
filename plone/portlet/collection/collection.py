@@ -1,12 +1,15 @@
-from AccessControl import getSecurityManager
+from ComputedAttribute import ComputedAttribute
 from plone.app.portlets.browser import formhelper
 from plone.app.portlets.portlets import base
+from plone.app.uuid.utils import uuidToObject
 from plone.app.vocabularies.catalog import CatalogSource
 from plone.i18n.normalizer.interfaces import IIDNormalizer
 from plone.memoize.instance import memoize
 from plone.portlet.collection import PloneMessageFactory as _
 from plone.portlets.interfaces import IPortletDataProvider
+from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from zExceptions import NotFound
 from zope import schema
 from zope.component import getUtility
 from zope.interface import implements
@@ -36,7 +39,7 @@ class ICollectionPortlet(IPortletDataProvider):
         description=_(u"Title of the rendered portlet"),
         required=True)
 
-    target_collection = schema.Choice(
+    uid = schema.Choice(
         title=_(u"Target collection"),
         description=_(u"Find the collection which provides the items to list"),
         required=True,
@@ -82,16 +85,18 @@ class Assignment(base.Assignment):
     implements(ICollectionPortlet)
 
     header = u""
-    target_collection = None
     limit = None
     random = False
     show_more = True
     show_dates = False
 
-    def __init__(self, header=u"", target_collection=None, limit=None,
+    # bbb
+    target_collection = None
+
+    def __init__(self, header=u"", uid=None, limit=None,
                  random=False, show_more=True, show_dates=False):
         self.header = header
-        self.target_collection = target_collection
+        self.uid = uid
         self.limit = limit
         self.random = random
         self.show_more = show_more
@@ -103,6 +108,19 @@ class Assignment(base.Assignment):
         "manage portlets" screen. Here, we use the title that the user gave.
         """
         return self.header
+
+    def _uid(self):
+        # This is only called if the instance doesn't have a uid
+        # attribute, which is probably because it has an old
+        # 'target_collection' attribute that needs to be converted.
+        path = self.target_collection
+        portal = getToolByName(self, 'portal_url').getPortalObject()
+        try:
+            collection = portal.unrestrictedTraverse(path.lstrip('/'))
+        except (AttributeError, KeyError, TypeError, NotFound):
+            return
+        return collection.UID()
+    uid = ComputedAttribute(_uid, 1)
 
 
 class Renderer(base.Renderer):
@@ -169,16 +187,7 @@ class Renderer(base.Renderer):
 
     @memoize
     def collection(self):
-        if not self.data.target_collection or \
-           not hasattr(self.data.target_collection, 'to_object'):
-            return None
-
-        result = self.data.target_collection.to_object
-        if result is not None:
-            sm = getSecurityManager()
-            if not sm.checkPermission('View', result):
-                result = None
-        return result
+        return uuidToObject(self.data.uid)
 
     def include_empty_footer(self):
         """
