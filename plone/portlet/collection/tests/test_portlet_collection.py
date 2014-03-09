@@ -1,5 +1,3 @@
-from five.intid.intid import IntIds
-from five.intid.site import addUtility
 from plone.app.portlets.storage import PortletAssignmentMapping
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import setRoles
@@ -11,9 +9,6 @@ from plone.portlets.interfaces import IPortletDataProvider
 from plone.portlets.interfaces import IPortletRenderer
 from Products.CMFCore.utils import getToolByName
 from zope.component import getUtility, getMultiAdapter
-from zope.component import getSiteManager
-from zope.intid.interfaces import IIntIds
-from z3c.relationfield.relation import create_relation
 
 from plone.portlet.collection import collection
 from plone.portlet.collection.testing import (
@@ -34,8 +29,6 @@ class TestPortlet(unittest.TestCase):
         setRoles(self.portal, TEST_USER_ID, ['Manager'])
         self.portal.invokeFactory('Folder', 'folder')
         self.folder = self.portal.folder
-        sm = getSiteManager(self.portal)
-        addUtility(sm, IIntIds, IntIds, ofs_name='intids', findroot=False)
 
     def testPortletTypeRegistered(self):
         portlet = getUtility(
@@ -91,8 +84,6 @@ class TestRenderer(unittest.TestCase):
         setRoles(self.portal, TEST_USER_ID, ['Manager'])
         self.portal.invokeFactory('Folder', 'folder')
         self.folder = self.portal.folder
-        sm = getSiteManager(self.portal)
-        addUtility(sm, IIntIds, IntIds, ofs_name='intids', findroot=False)
 
     def renderer(self, context=None, request=None, view=None, manager=None,
                  assignment=None):
@@ -176,7 +167,7 @@ class TestCollectionQuery(unittest.TestCase):
         mapping = PortletAssignmentMapping()
         mapping['foo'] = collection.Assignment(
             header=u"title",
-            target_collection=create_relation('/plone/folder/private/public/collection')
+            uid=self.portal.folder.private.public.collection.UID()
         )
         logout()
         collectionrenderer = self.renderer(
@@ -207,7 +198,7 @@ class TestCollectionQuery(unittest.TestCase):
         mapping = PortletAssignmentMapping()
         mapping['foo'] = collection.Assignment(
             header=u"title",
-            target_collection=create_relation('/plone/folder/collection')
+            uid=self.folder.collection.UID()
         )
         collectionrenderer = self.renderer(
             context=None,
@@ -226,7 +217,7 @@ class TestCollectionQuery(unittest.TestCase):
         mapping['foo'] = collection.Assignment(
             header=u"title",
             random=True,
-            target_collection=create_relation('/plone/folder/collection')
+            uid=self.folder.collection.UID()
         )
         # add some folders
         for i in range(6):
