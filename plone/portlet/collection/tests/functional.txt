@@ -4,6 +4,15 @@ A functional doctest
 
 Set up testbrowser::
 
+    >>> def getAuth():
+    ...     try:
+    ...         from plone.protect import authenticator
+    ...         return authenticator.createToken()
+    ...     except:  # no plone.protect auto csrf, so no worries
+    ...         return ''
+
+    >>> from plone.app.testing import login
+    >>> login(layer['portal'], 'admin')
     >>> app = layer['app']
     >>> from plone.testing.z2 import Browser
     >>> browser = Browser(app)
@@ -36,8 +45,7 @@ everything.
     >>> transaction.commit()
 
 Now open the portlet manager for the site.
-
-    >>> browser.open(portal_url + '/@@manage-portlets')
+    >>> browser.open(portal_url + '/@@manage-portlets?_authenticator=' + getAuth())
 
 Use the 'Add portlet' select box to add a collection portlet.
 
