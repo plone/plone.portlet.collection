@@ -198,7 +198,8 @@ class TestCollectionQuery(unittest.TestCase):
         mapping = PortletAssignmentMapping()
         mapping['foo'] = collection.Assignment(
             header=u"title",
-            uid=self.folder.collection.UID()
+            uid=self.folder.collection.UID(),
+            exclude_context=False,
         )
         collectionrenderer = self.renderer(
             context=None,
@@ -306,3 +307,125 @@ class TestCollectionQuery(unittest.TestCase):
         )
         collectionrenderer.data.limit = 10
         self.assertTrue(len(collectionrenderer.results()) >= 6)
+
+    def test_exclude_context(self):
+        """
+        The exclude context field controls including self in the results.
+        """
+        for idx in range(4):
+            self._createType(
+                self.folder, 'News Item',
+                'foo-news-item-title-{0}'.format(idx))
+        self.folder.collection.query = [{
+            'i': 'portal_type',
+            'o': 'plone.app.querystring.operation.string.is',
+            'v': 'News Item'}]
+        self.folder.collection.sort_on = 'created'
+        context = self.folder['foo-news-item-title-1']
+        included = [
+            self.folder['foo-news-item-title-{0}'.format(idx)].absolute_url()
+            for idx in (0, 2)]
+        limited = self.folder['foo-news-item-title-3'].absolute_url()
+
+        assignment = collection.Assignment(
+            header=u"title", uid=self.folder.collection.UID(), limit=2)
+        
+        folder_renderer = self.renderer(
+            context=self.folder, assignment=assignment)
+        folder_results = [
+            brain.getURL() for brain in folder_renderer.results()]
+        self.assertEqual(
+            len(folder_results), 2, 'Wrong number of folder rendered results')
+        self.assertIn(
+            included[0], folder_results,
+            'Folder rendered results missing item')
+        self.assertIn(
+            context.absolute_url(), folder_results,
+            'Folder rendered results missing context item')
+        self.assertNotIn(
+            included[1], folder_results,
+            'Folder rendered results included too many items')
+        self.assertNotIn(
+            limited, folder_results,
+            'Folder rendered results included way too many items')
+        
+        renderer = self.renderer(context=context, assignment=assignment)
+        results = [
+            brain.getURL() for brain in renderer.results()]
+        self.assertEqual(
+            len(results), 2, 'Wrong number of context rendered results')
+        self.assertIn(
+            included[0], results,
+            'Context rendered results missing item')
+        self.assertIn(
+            included[1], results,
+            'Context rendered results missing item')
+        self.assertNotIn(
+            context.absolute_url(), results,
+            'Context rendered results included context')
+        self.assertNotIn(
+            limited, results,
+            'Context rendered results included too many items')
+
+        assignment.exclude_context = False
+        context_renderer = self.renderer(
+            context=context, assignment=assignment)
+        context_results = [
+            brain.getURL() for brain in context_renderer.results()]
+        self.assertEqual(
+            len(context_results), 2,
+            'Wrong number of context rendered results')
+        self.assertIn(
+            included[0], context_results,
+            'Context rendered results missing item')
+        self.assertIn(
+            context.absolute_url(), context_results,
+            'Context rendered results missing context')
+        self.assertNotIn(
+            included[1], context_results,
+            'Context rendered results included too many items')
+        self.assertNotIn(
+            limited, context_results,
+            'Context rendered results included way too many items')
+
+        del assignment.exclude_context
+        missing_renderer = self.renderer(
+            context=context, assignment=assignment)
+        missing_results = [
+            brain.getURL() for brain in missing_renderer.results()]
+        self.assertEqual(
+            len(missing_results), 2,
+            'Wrong number of context rendered results')
+        self.assertIn(
+            included[0], missing_results,
+            'Context rendered results missing item')
+        self.assertIn(
+            context.absolute_url(), missing_results,
+            'Context rendered results missing context')
+        self.assertNotIn(
+            included[1], missing_results,
+            'Context rendered results included too many items')
+        self.assertNotIn(
+            limited, missing_results,
+            'Context rendered results included way too many items')
+        
+        assignment.limit = 4
+        assignment.random = True
+        assignment.exclude_context = True
+        random_renderer = self.renderer(context=context, assignment=assignment)
+        random_results = [
+            brain.getURL() for brain in random_renderer.results()]
+        self.assertEqual(
+            len(random_results), 3, 'Wrong number of random rendered results')
+        self.assertIn(
+            included[0], random_results,
+            'Context rendered results missing item')
+        self.assertIn(
+            included[1], random_results,
+            'Context rendered results missing item')
+        self.assertIn(
+            limited, random_results,
+            'Context rendered results missing item')
+        self.assertNotIn(
+            context.absolute_url(), random_results,
+            'Context rendered results included context')

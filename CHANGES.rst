@@ -4,7 +4,10 @@ Changelog
 3.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add an option for excluding the render context from the collection results
+  since in most cases it's undesirable to include the current context in a
+  listing on that context's view.
+  [rpatterson]
 
 
 3.0 (2014-04-05)
