@@ -67,6 +67,14 @@ class ICollectionPortlet(IPortletDataProvider):
         required=True,
         default=False)
 
+    exclude_context = schema.Bool(
+        title=_(u"Exclude the Current Context"),
+        description=_(
+            u"If enabled, the listing will not include the current item the "
+            u"portlet is rendered for if it otherwise would be."),
+        required=True,
+        default=True)
+
 
 class Assignment(base.Assignment):
     """
@@ -85,13 +93,15 @@ class Assignment(base.Assignment):
     show_dates = False
 
     def __init__(self, header=u"", target_collection=None, limit=None,
-                 random=False, show_more=True, show_dates=False):
+                 random=False, show_more=True, show_dates=False,
+                 exclude_context=True):
         self.header = header
         self.target_collection = target_collection
         self.limit = limit
         self.random = random
         self.show_more = show_more
         self.show_dates = show_dates
+        self.exclude_context = exclude_context
 
     @property
     def title(self):
@@ -136,13 +146,20 @@ class Renderer(base.Renderer):
         results = []
         collection = self.collection()
         if collection is not None:
+            context_path = '/'.join(self.context.getPhysicalPath())
+            exclude_context = getattr(self.data, 'exclude_context', False)
             limit = self.data.limit
             if limit and limit > 0:
                 # pass on batching hints to the catalog
-                results = collection.queryCatalog(batch=True, b_size=limit)
+                results = collection.queryCatalog(
+                    batch=True, b_size=limit  + exclude_context)
                 results = results._sequence
             else:
                 results = collection.queryCatalog()
+            if exclude_context:
+                results = [
+                    brain for brain in results
+                    if brain.getPath() != context_path]
             if limit and limit > 0:
                 results = results[:limit]
         return results
@@ -152,11 +169,17 @@ class Renderer(base.Renderer):
         results = []
         collection = self.collection()
         if collection is not None:
+            context_path = '/'.join(self.context.getPhysicalPath())
+            exclude_context = getattr(self.data, 'exclude_context', False)
             results = collection.queryCatalog(sort_on=None)
             if results is None:
                 return []
             limit = self.data.limit and min(len(results), self.data.limit) or 1
 
+            if exclude_context:
+                results = [
+                    brain for brain in results
+                    if brain.getPath() != context_path]
             if len(results) < limit:
                 limit = len(results)
             results = random.sample(results, limit)

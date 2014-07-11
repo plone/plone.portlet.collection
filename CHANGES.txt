@@ -4,6 +4,11 @@ Changelog
 2.1.6 (unreleased)
 ------------------
 
+- Add an option for excluding the render context from the collection results
+  since in most cases it's undesirable to include the current context in a
+  listing on that context's view.
+  [rpatterson]
+
 - (backport) Provide a hook to facilitate overrides that do not 
   include an empty footer when the more link is turned off.
   [anthonygerrard]
