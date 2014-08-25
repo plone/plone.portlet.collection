@@ -329,7 +329,7 @@ class TestCollectionQuery(unittest.TestCase):
 
         assignment = collection.Assignment(
             header=u"title", uid=self.folder.collection.UID(), limit=2)
-        
+
         folder_renderer = self.renderer(
             context=self.folder, assignment=assignment)
         folder_results = [
@@ -348,7 +348,7 @@ class TestCollectionQuery(unittest.TestCase):
         self.assertNotIn(
             limited, folder_results,
             'Folder rendered results included way too many items')
-        
+
         renderer = self.renderer(context=context, assignment=assignment)
         results = [
             brain.getURL() for brain in renderer.results()]
@@ -408,7 +408,7 @@ class TestCollectionQuery(unittest.TestCase):
         self.assertNotIn(
             limited, missing_results,
             'Context rendered results included way too many items')
-        
+
         assignment.limit = 4
         assignment.random = True
         assignment.exclude_context = True
