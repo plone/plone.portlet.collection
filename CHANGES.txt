@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.6 (unreleased)
+2.1.6 (2014-09-07)
 ------------------
 
 - Add an option for excluding the render context from the collection results
