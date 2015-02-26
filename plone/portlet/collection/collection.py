@@ -91,6 +91,7 @@ class Assignment(base.Assignment):
     random = False
     show_more = True
     show_dates = False
+    exclude_context = False
 
     def __init__(self, header=u"", target_collection=None, limit=None,
                  random=False, show_more=True, show_dates=False,
