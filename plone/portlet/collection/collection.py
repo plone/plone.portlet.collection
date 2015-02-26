@@ -97,6 +97,7 @@ class Assignment(base.Assignment):
     random = False
     show_more = True
     show_dates = False
+    exclude_context = False
 
     # bbb
     target_collection = None
