@@ -1,7 +1,7 @@
 Changelog
 =========
 
-3.0.1 (unreleased)
+3.0.1 (2015-03-13)
 ------------------
 
 - fix AttributeError: exclude_context on existing portlet assignments, refs #5
