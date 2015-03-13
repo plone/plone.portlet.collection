@@ -4,6 +4,9 @@ Changelog
 3.0.1 (unreleased)
 ------------------
 
+- fix AttributeError: exclude_context on existing portlet assignments, refs #5
+  [davisagli]
+
 - Add an option for excluding the render context from the collection results
   since in most cases it's undesirable to include the current context in a
   listing on that context's view.
