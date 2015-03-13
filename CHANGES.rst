@@ -4,7 +4,8 @@ Changelog
 3.0.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- ReST fix.
+  [timo]
 
 
 3.0.1 (2015-03-13)
@@ -33,7 +34,7 @@ Changelog
 2.2.1 (2014-02-22)
 ------------------
 
-- Include *.rst files in releases.
+- Include rst files in releases.
   [timo]
 
 
