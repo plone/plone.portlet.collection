@@ -71,26 +71,27 @@ of the site. Show only two items to make the test sanely terse.
 Go to the home page and see if the portlet looks OK.
 
     >>> browser.open(portal_url)
-    >>> import re
-    >>> match = re.search('<dl class="portlet portletCollection.*?</dl>', browser.contents, flags=re.DOTALL)
-    >>> portlet_contents = match.group()
+    >>> from lxml import etree
+    >>> html = etree.HTML(browser.contents)
+    >>> portlet = html.xpath('//*[contains(@class, "portletCollection")]')[0]
+    >>> portlet_contents = etree.tostring(portlet)
     >>> def strip_white_space(contents):
     ...     lines = [line.strip() for line in contents.splitlines() if line.strip()]
     ...     return '\n'.join(lines)
     >>> print strip_white_space(portlet_contents)
-    <dl class="portlet portletCollection portlet-collection-test-collection"><dt class="portletHeader">
+    <section class="portlet portletCollection portlet-collection-test-collection"><header class="portletHeader">
     <span class="portletTopLeft"></span>
     <a href="http://nohost/plone/test-collection">
     <span>Test Collection</span>
     </a>
     <span class="portletTopRight"></span>
-    </dt>
-    <dd class="portletItem odd">
+    </header>
+    <li class="portletItem odd">
     <a href="http://nohost/plone/test-document" class="tile contenttype-document" title="">
     Test Document
     </a>
-    </dd>
-    <dd class="portletFooter">
+    </li>
+    <footer class="portletFooter">
     <span class="portletBottomLeft"></span>
     <span>
     <a href="http://nohost/plone/test-collection">
@@ -99,8 +100,8 @@ Go to the home page and see if the portlet looks OK.
     </a>
     </span>
     <span class="portletBottomRight"></span>
-    </dd>
-    </dl>
+    </footer>
+    </section>
 
 Now test what happens if we toggle the "show more link" option.
 
@@ -116,21 +117,8 @@ Now test what happens if we toggle the "show more link" option.
 Go back to the home page and see if it looks OK.
 
     >>> browser.open(portal_url)
-    >>> match = re.search('<dl class="portlet portletCollection.*?</dl>', browser.contents, flags=re.DOTALL)
-    >>> portlet_contents = match.group()
-    >>> print strip_white_space(portlet_contents)
-    <dl class="portlet portletCollection portlet-collection-test-collection"><dt class="portletHeader">
-    <span class="portletTopLeft"></span>
-    <span>Test Collection</span>
-    <span class="portletTopRight"></span>
-    </dt>
-    <dd class="portletItem odd">
-    <a href="http://nohost/plone/test-document" class="tile contenttype-document" title="">
-    Test Document
-    </a>
-    </dd>
-    <dd class="portletFooter">
-    <span class="portletBottomLeft"></span>
-    <span class="portletBottomRight"></span>
-    </dd>
-    </dl>
+    >>> html = etree.HTML(browser.contents)
+    >>> portlet = html.xpath('//*[contains(@class, "portletCollection")]')[0]
+    >>> portlet_contents = etree.tostring(portlet)
+    >>> '<a href="http://nohost/plone/test-collection">' in portlet_contents
+    False
