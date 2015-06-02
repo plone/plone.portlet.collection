@@ -80,26 +80,28 @@ Go to the home page and see if the portlet looks OK.
     ...     return '\n'.join(lines)
     >>> print strip_white_space(portlet_contents)
     <section class="portlet portletCollection portlet-collection-test-collection"><header class="portletHeader">
-    <span class="portletTopLeft"></span>
+    <span class="portletTopLeft"...
     <a href="http://nohost/plone/test-collection">
     <span>Test Collection</span>
     </a>
-    <span class="portletTopRight"></span>
+    <span class="portletTopRight"...
     </header>
+    <ul class="portletContent">
     <li class="portletItem odd">
     <a href="http://nohost/plone/test-document" class="tile contenttype-document" title="">
     Test Document
     </a>
     </li>
+    </ul>
     <footer class="portletFooter">
-    <span class="portletBottomLeft"></span>
+    <span class="portletBottomLeft"...
     <span>
     <a href="http://nohost/plone/test-collection">
     <span class="hiddenStructure">Test Collection - </span>
-    <span>More...</span>
+    <span>More...
     </a>
     </span>
-    <span class="portletBottomRight"></span>
+    <span class="portletBottomRight"...
     </footer>
     </section>
 
