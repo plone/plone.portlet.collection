@@ -1,7 +1,7 @@
 Changelog
 =========
 
-3.0.3 (unreleased)
+3.0.3 (2015-06-05)
 ------------------
 
 - Fix test to be more forgiving on matches html
