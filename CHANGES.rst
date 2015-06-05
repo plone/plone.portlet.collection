@@ -4,7 +4,20 @@ Changelog
 3.0.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix test to be more forgiving on matches html
+  [vangheem]
+
+- This package does not depend on plone.app.form
+  [tomgross]
+
+- Fix last part of the test: regexp -> lxml
+  [khink]
+
+- Fix tests. Kids, don't parse HTML with regexps.
+  [khink]
+
+- Remove DL's from portlet templates.
+  [khink]
 
 
 3.0.2 (2015-03-13)
