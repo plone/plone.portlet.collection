@@ -30,7 +30,7 @@
             </span>
             <span class="portletItemDetails"
                   tal:condition="view/data/show_dates"
-                  tal:content="python:toLocalizedTime(obj.Date)">
+                  tal:content="python:toLocalizedTime(obj.Date())">
                 Date
             </span>
         </a>
