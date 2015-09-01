@@ -50,8 +50,7 @@ Use the 'Add portlet' select box to add a collection portlet.
     >>> re.search('<h1\s+class="documentFirstHeading"\s*>\s*Add Collection Portlet\s*</h1>', browser.contents) is not None
     True
 
-Use your new collection for testing. It should already be available at the root
-of the site. Show only two items to make the test sanely terse.
+Use your new collection for testing. It should already be available at the root of the site. Show only two items to make the test sanely terse.
 
     >>> browser.getControl(name="form.target_collection").getControl(value="/test-collection").selected = True
     >>> browser.getControl(name="form.target_collection.update").click()
@@ -129,3 +128,22 @@ Go back to the home page and see if it looks OK.
     <span class="portletBottomRight"></span>
     </dd>
     </dl>
+
+Now test what happens if we toggle the "show dates" option.
+
+    >>> browser.open(portal_url + '/@@manage-portlets')
+    >>> browser.getLink(url="http://nohost/plone/++contextportlets++plone.leftcolumn/test-collection/edit?referer=http%3A//nohost/plone/%40%40manage-portlets").click()
+    >>> re.search('<h1\s+class="documentFirstHeading"\s*>\s*Edit Collection Portlet\s*</h1>', browser.contents) is not None
+    True
+    >>> browser.getControl(label="Show dates").selected = True
+    >>> browser.getControl(name="form.actions.save").click()
+    >>> print browser.url
+    http://nohost/plone/@@manage-portlets
+
+Make sure the dates show up::
+
+    >>> browser.open(portal_url)
+    >>> '<span class="portletItemDetails">' in browser.contents
+    True
+
+
