@@ -146,4 +146,8 @@ Make sure the dates show up::
     >>> '<span class="portletItemDetails">' in browser.contents
     True
 
+    >>> from DateTime import DateTime
+    >>> cur_year = DateTime().year()
+    >>> re.search('<span class="portletItemDetails">.*{}.*</span>'.format(cur_year), browser.contents) is not None
+    True
 
