@@ -124,3 +124,20 @@ Go back to the home page and see if it looks OK.
     >>> portlet_contents = etree.tostring(portlet)
     >>> '<a href="http://nohost/plone/test-collection">' in portlet_contents
     False
+
+Now test what happens if we toggle the "show dates" option.
+
+    >>> browser.open(portal_url + '/@@manage-portlets')
+    >>> browser.getLink(url="http://nohost/plone/++contextportlets++plone.leftcolumn/test-collection/edit?referer=http%3A//nohost/plone/%40%40manage-portlets").click()
+    >>> re.search('<h1\s+class="documentFirstHeading"\s*>\s*Edit Collection Portlet\s*</h1>', browser.contents) is not None
+    True
+    >>> browser.getControl(label="Show dates").selected = True
+    >>> browser.getControl("Save").click()
+    >>> print browser.url
+    http://nohost/plone/@@manage-portlets
+
+Make sure the dates show up::
+
+    >>> browser.open(portal_url)
+    >>> '<span class="portletItemDetails">' in browser.contents
+    True
