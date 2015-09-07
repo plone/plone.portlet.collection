@@ -1,7 +1,7 @@
 Changelog
 =========
 
-3.0.4 (unreleased)
+3.0.4 (2015-09-07)
 ------------------
 
 - Fix show_dates by calling obj.Date(). This fixes https://github.com/plone/plone.app.contenttypes/issues/263
