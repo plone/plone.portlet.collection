@@ -4,7 +4,8 @@ Changelog
 3.0.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Use registry lookup for types_use_view_action_in_listings
+  [esteele]
 
 
 3.0.4 (2015-09-07)
