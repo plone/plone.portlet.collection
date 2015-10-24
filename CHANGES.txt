@@ -4,7 +4,10 @@ Changelog
 2.1.9 (unreleased)
 ------------------
 
-- Nothing changed yet.
+Fixes:
+
+- Fixed show_dates test to actually test for a real date.
+  [timo, maurits]
 
 
 2.1.8 (2015-09-02)
@@ -29,7 +32,7 @@ Changelog
   listing on that context's view.
   [rpatterson]
 
-- (backport) Provide a hook to facilitate overrides that do not 
+- (backport) Provide a hook to facilitate overrides that do not
   include an empty footer when the more link is turned off.
   [anthonygerrard]
 
