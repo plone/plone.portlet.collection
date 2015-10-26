@@ -16,18 +16,26 @@
   <ul class="portletContent">
     <tal:events tal:repeat="obj view/results">
     <li class="portletItem"
-        tal:define="oddrow repeat/obj/odd;
+        tal:define="plone_view context/@@plone;
+                    oddrow repeat/obj/odd;
                     useView python:obj.portal_type in viewActions;
                     itemUrl python:useView and obj.getURL() + '/view' or obj.getURL();
-                    normalizeString nocall:plone_view/normalizeString;"
+                    item_wf_state obj/review_state;
+                    item_wf_state_class python:'state-' + plone_view.normalizeString(item_wf_state);
+                    item_type obj/portal_type;
+                    item_type_class python:'contenttype-' + plone_view.normalizeString(item_type);"
         tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
         <a href="#"
            tal:attributes="href itemUrl;
-                           class python:'tile contenttype-' + normalizeString(obj.portal_type);
+                           class  string:tile $item_type_class $item_wf_state_class;
                            title obj/Description">
+            <img class="image-icon"
+               tal:define="thumb python:obj.getURL()+'/@@images/image/icon'"
+               tal:condition=" obj/getIcon"
+               tal:attributes="href obj/getURL;
+                               src  string:$thumb;">
             <span tal:replace="obj/Title">
-             Title
-            </span>
+             Title </span>
             <span class="portletItemDetails"
                   tal:condition="view/data/show_dates"
                   tal:define="obj_date obj/Date"

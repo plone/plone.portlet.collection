@@ -9,7 +9,11 @@ Fixes:
 - Used registry lookup for types_use_view_action_in_listings.
   [esteele]
 
-
+- Cleanup and rework: contenttype-icons and showing thumbnails
+  for images/leadimages in listings
+  https://github.com/plone/Products.CMFPlone/issues/1226
+  [fgrcon]
+  
 3.0.4 (2015-09-07)
 ------------------
 
