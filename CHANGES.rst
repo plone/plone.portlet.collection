@@ -9,7 +9,9 @@ Fixes:
 - Used registry lookup for types_use_view_action_in_listings.
   [esteele]
 
-
+- show thumbs when items are images or have leadimages (CMFPlone#1151, #1185)
+  [fgrcon]
+  
 3.0.4 (2015-09-07)
 ------------------
 
