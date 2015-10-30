@@ -4,7 +4,9 @@ Changelog
 3.0.5 (unreleased)
 ------------------
 
-- Use registry lookup for types_use_view_action_in_listings
+Fixes:
+
+- Used registry lookup for types_use_view_action_in_listings.
   [esteele]
 
 
