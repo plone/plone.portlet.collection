@@ -88,7 +88,7 @@ Go to the home page and see if the portlet looks OK.
     </header>
     <ul class="portletContent">
     <li class="portletItem odd">
-    <a href="http://nohost/plone/test-document" class="tile contenttype-document" title="">
+    <a href="http://nohost/plone/test-document" class="tile contenttype-document state-private" title="">
     Test Document
     </a>
     </li>
