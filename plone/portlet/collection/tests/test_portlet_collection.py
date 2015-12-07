@@ -320,7 +320,7 @@ class TestCollectionQuery(unittest.TestCase):
             'i': 'portal_type',
             'o': 'plone.app.querystring.operation.string.is',
             'v': 'News Item'}]
-        self.folder.collection.sort_on = 'created'
+        self.folder.collection.sort_on = 'id'
         context = self.folder['foo-news-item-title-1']
         included = [
             self.folder['foo-news-item-title-{0}'.format(idx)].absolute_url()
