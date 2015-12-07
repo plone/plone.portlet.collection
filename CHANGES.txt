@@ -10,7 +10,8 @@ New:
 
 Fixes:
 
-- *add item here*
+- Fixed sometimes failing test due to sorting.
+  [maurits]
 
 
 2.1.9 (2015-10-30)
