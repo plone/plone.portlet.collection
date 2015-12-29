@@ -10,6 +10,10 @@ New:
 
 Fixes:
 
+- Fix 'Select random items' when used with new-style collections
+  with more results than the batch size.
+  [davisagli]
+
 - Fixed sometimes failing test due to sorting.
   [maurits]
 

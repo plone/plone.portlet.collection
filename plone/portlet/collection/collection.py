@@ -172,7 +172,7 @@ class Renderer(base.Renderer):
         if collection is not None:
             context_path = '/'.join(self.context.getPhysicalPath())
             exclude_context = getattr(self.data, 'exclude_context', False)
-            results = collection.queryCatalog(sort_on=None)
+            results = collection.queryCatalog(sort_on=None, batch=False)
             if results is None:
                 return []
             limit = self.data.limit and min(len(results), self.data.limit) or 1
