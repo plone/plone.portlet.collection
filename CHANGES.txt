@@ -4,10 +4,6 @@ Changelog
 2.1.10 (unreleased)
 -------------------
 
-New:
-
-- *add item here*
-
 Fixes:
 
 - Fix 'Select random items' when used with new-style collections
