@@ -4,10 +4,6 @@ Changelog
 3.0.6 (unreleased)
 ------------------
 
-New:
-
-- *add item here*
-
 Fixes:
 
 - Fixed sometimes failing test due to sorting.
