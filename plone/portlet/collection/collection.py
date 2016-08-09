@@ -6,6 +6,7 @@ from zope.interface import implements
 from zope.component import getUtility
 
 from plone.portlets.interfaces import IPortletDataProvider
+from plone.app.layout.navigation.defaultpage import isDefaultPage
 from plone.app.portlets.portlets import base
 from plone.app.portlets.browser import z3cformhelper
 
@@ -133,9 +134,11 @@ class Renderer(base.Renderer):
     def collection_url(self):
         collection = self.collection()
         if collection is None:
-            return None
-        else:
-            return collection.absolute_url()
+            return
+        parent = collection.aq_parent
+        if isDefaultPage(parent, collection):
+            collection = parent
+        return collection.absolute_url()
 
     def css_class(self):
         header = self.data.header
