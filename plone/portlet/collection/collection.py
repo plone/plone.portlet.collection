@@ -148,9 +148,8 @@ class Renderer(base.Renderer):
     def collection_url(self):
         collection = self.collection()
         if collection is None:
-            return None
-        else:
-            return collection.absolute_url()
+            return
+        return collection.absolute_url()
 
     def css_class(self):
         header = self.data.header
