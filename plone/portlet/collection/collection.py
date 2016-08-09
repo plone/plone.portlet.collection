@@ -1,4 +1,5 @@
 from ComputedAttribute import ComputedAttribute
+from plone.app.layout.navigation.defaultpage import isDefaultPage
 from plone.app.portlets.browser import formhelper
 from plone.app.portlets.portlets import base
 from plone.app.uuid.utils import uuidToObject
@@ -149,6 +150,9 @@ class Renderer(base.Renderer):
         collection = self.collection()
         if collection is None:
             return
+        parent = collection.aq_parent
+        if isDefaultPage(parent, collection):
+            collection = parent
         return collection.absolute_url()
 
     def css_class(self):

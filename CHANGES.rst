@@ -6,7 +6,8 @@ Changelog
 
 New:
 
-- *add item here*
+- If collection is default page in parent, link to parent.
+  [malthe]
 
 Fixes:
 
