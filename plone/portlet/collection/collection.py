@@ -1,4 +1,5 @@
 from ComputedAttribute import ComputedAttribute
+from plone import api
 from plone.app.layout.navigation.defaultpage import isDefaultPage
 from plone.app.portlets.browser import formhelper
 from plone.app.portlets.portlets import base
@@ -8,12 +9,16 @@ from plone.i18n.normalizer.interfaces import IIDNormalizer
 from plone.memoize.instance import memoize
 from plone.portlet.collection import PloneMessageFactory as _
 from plone.portlets.interfaces import IPortletDataProvider
+from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.interfaces.controlpanel import ISiteSchema
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.MimetypesRegistry.MimeTypeItem import guess_icon_path
 from zExceptions import NotFound
 from zope import schema
 from zope.component import getUtility
 from zope.interface import implementer
+import os
 import random
 
 COLLECTIONS = []
@@ -83,6 +88,29 @@ class ICollectionPortlet(IPortletDataProvider):
         required=True,
         default=True)
 
+    no_icons = schema.Bool(
+        title=_(u"Suppress Icons "),
+        description=_(
+            u"If enabled, the portlet will not show document type icons"),
+        required=True,
+        default=False)
+
+    ov_thumbsize = schema.TextLine(
+        title=_(u"Override thumb size "),
+        description=_(u"<br><ul><li> Enter a valid scale name"
+             u"(see 'Image Handling' control panel) to override"
+             u" e.g. icon, tile, thumb, mini, preview, ... )  </li>"
+             u"<li>leave empty to use default "
+             u"(see 'Site' control panel)</li></ul>"),
+        required=False,
+        default=u'')
+    
+    no_thumbs = schema.Bool(
+        title=_(u"Suppress thumbs "),
+        description=_(
+            u"If enabled, the portlet will not show thumbs"),
+        required=True,
+        default=False)
 
 @implementer(ICollectionPortlet)
 class Assignment(base.Assignment):
@@ -91,20 +119,22 @@ class Assignment(base.Assignment):
     This is what is actually managed through the portlets UI and associated
     with columns.
     """
-
     header = u""
     limit = None
     random = False
     show_more = True
     show_dates = False
     exclude_context = False
-
+    no_icons = False
+    no_thumbs = False
+    ov_thumbsize = ''
     # bbb
     target_collection = None
 
     def __init__(self, header=u"", uid=None, limit=None,
                  random=False, show_more=True, show_dates=False,
-                 exclude_context=True):
+                 exclude_context=True, no_icons = False, no_thumbs = False,               
+                 ov_thumbsize = ''):       
         self.header = header
         self.uid = uid
         self.limit = limit
@@ -112,6 +142,9 @@ class Assignment(base.Assignment):
         self.show_more = show_more
         self.show_dates = show_dates
         self.exclude_context = exclude_context
+        self.no_icons = no_icons
+        self.no_thumbs = no_thumbs
+        self.ov_thumbsize = ov_thumbsize
 
     @property
     def title(self):
@@ -135,7 +168,6 @@ class Assignment(base.Assignment):
 
 
 class Renderer(base.Renderer):
-
     _template = ViewPageTemplateFile('collection.pt')
     render = _template
 
@@ -224,6 +256,32 @@ class Renderer(base.Renderer):
         """
         return True
 
+    @memoize
+    def thumb_size(self):
+        ''' use  overrride value or read thumb_size from registry
+            image sizes must fit to value in allowed image sizes
+            none will suppress thumb!
+        '''
+        if self.data.ov_thumbsize > ' ':
+            return  self.data.ov_thumbsize
+        registry = getUtility(IRegistry)
+        settings = registry.forInterface(
+            ISiteSchema, prefix="plone", check=False)
+        if settings.no_thumbs_portlet:
+            return 'none'         
+        thumb_size_portlet = settings.thumb_size_portlet
+        return thumb_size_portlet
+
+    def getMimeTypeIcon(self,obj):     
+        fileo = obj.getObject().file
+        portal_url = api.portal.get().absolute_url()
+        mtt = api.portal.get_tool(name='mimetypes_registry')
+        if fileo.contentType: 
+            ctype = mtt.lookup(fileo.contentType)
+            return os.path.join(portal_url,
+                 guess_icon_path(ctype[0])
+                )
+        return None 
 
 class AddForm(formhelper.AddForm):
     schema = ICollectionPortlet

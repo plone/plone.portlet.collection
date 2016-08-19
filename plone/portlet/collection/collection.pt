@@ -23,17 +23,25 @@
                     item_wf_state obj/review_state;
                     item_wf_state_class python:'state-' + plone_view.normalizeString(item_wf_state);
                     item_type obj/portal_type;
-                    item_type_class python:'contenttype-' + plone_view.normalizeString(item_type);"
+                    supress_icon    view/data/no_icons;
+                    supress_thumb   view/data/no_thumbs;
+                    thumb_size view/thumb_size;
+                    item_type_class python:('contenttype-' + plone_view.normalizeString(item_type)) if not supress_icon else ''"
         tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
         <a href="#"
            tal:attributes="href itemUrl;
                            class  string:tile $item_type_class $item_wf_state_class;
                            title obj/Description">
-            <img class="image-icon"
-               tal:define="thumb python:obj.getURL()+'/@@images/image/icon'"
-               tal:condition=" obj/getIcon"
+            <img class="mime-icon" tal:condition="python:item_type =='File' and not supress_icon"
+                 tal:attributes="href obj/getURL;
+                                 src python:view.getMimeTypeIcon(obj);"> 
+            
+            <img 
+               tal:condition="python:obj.getIcon and ( thumb_size !='none') and  (not supress_thumb)" 
+               tal:define="thumb python:obj.getURL()+'/@@images/image/' + view.thumb_size()"
                tal:attributes="href obj/getURL;
-                               src  string:$thumb;">
+                               src  string:$thumb;
+                               class python:'image-'+thumb_size + ' pull-right'">
             <span tal:replace="obj/Title">
              Title </span>
             <span class="portletItemDetails"
