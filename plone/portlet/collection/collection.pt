@@ -16,7 +16,10 @@
   <ul class="portletContent">
     <tal:events tal:repeat="obj view/results">
     <li class="portletItem"
-        tal:define="plone_view context/@@plone;
+        tal:define="plone_layout context/@@plone_layout;
+                    portal context/@@plone_portal_state/portal;
+                    image_scale portal/@@image_scale;
+                    plone_view context/@@plone;
                     oddrow repeat/obj/odd;
                     useView python:obj.portal_type in viewActions;
                     itemUrl python:useView and obj.getURL() + '/view' or obj.getURL();
@@ -35,13 +38,10 @@
             <img class="mime-icon" tal:condition="python:item_type =='File' and not supress_icon"
                  tal:attributes="href obj/getURL;
                                  src python:view.getMimeTypeIcon(obj);"> 
-            
-            <img 
-               tal:condition="python:obj.getIcon and ( thumb_size !='none') and  (not supress_thumb)" 
-               tal:define="thumb python:obj.getURL()+'/@@images/image/' + view.thumb_size()"
-               tal:attributes="href obj/getURL;
-                               src  string:$thumb;
-                               class python:'image-'+thumb_size + ' pull-right'">
+
+            <img tal:condition="python: obj.getIcon and (view.thumb_size()!='none')"
+                 tal:replace="structure python:image_scale.tag(obj, 'image', scale=thumb_size, css_class='pull-right image-'+thumb_size)" />
+
             <span tal:replace="obj/Title">
              Title </span>
             <span class="portletItemDetails"
