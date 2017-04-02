@@ -39,7 +39,7 @@
                  tal:attributes="href obj/getURL;
                                  src python:view.getMimeTypeIcon(obj);"> 
 
-            <img tal:condition="python: obj.getIcon and (view.thumb_size()!='none')"
+            <img tal:condition="python: obj.getIcon and (view.thumb_size()!='none') and not supress_thumb"
                  tal:replace="structure python:image_scale.tag(obj, 'image', scale=thumb_size, css_class='pull-right image-'+thumb_size)" />
 
             <span tal:replace="obj/Title">
