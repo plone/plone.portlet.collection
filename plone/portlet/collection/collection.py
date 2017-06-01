@@ -1,6 +1,6 @@
 from ComputedAttribute import ComputedAttribute
-from plone import api
 from plone.app.layout.navigation.defaultpage import isDefaultPage
+from plone.app.layout.navigation.root import getNavigationRoot
 from plone.app.portlets.browser import formhelper
 from plone.app.portlets.portlets import base
 from plone.app.uuid.utils import uuidToObject
@@ -274,8 +274,8 @@ class Renderer(base.Renderer):
 
     def getMimeTypeIcon(self,obj):     
         fileo = obj.getObject().file
-        portal_url = api.portal.get().absolute_url()
-        mtt = api.portal.get_tool(name='mimetypes_registry')
+        portal_url = getNavigationRoot(self.context)
+        mtt = getToolByName(self.context,'mimetypes_registry')
         if fileo.contentType: 
             ctype = mtt.lookup(fileo.contentType)
             return os.path.join(portal_url,
