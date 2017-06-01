@@ -16,24 +16,32 @@
   <ul class="portletContent">
     <tal:events tal:repeat="obj view/results">
     <li class="portletItem"
-        tal:define="plone_view context/@@plone;
+        tal:define="plone_layout context/@@plone_layout;
+                    portal context/@@plone_portal_state/portal;
+                    image_scale portal/@@image_scale;
+                    plone_view context/@@plone;
                     oddrow repeat/obj/odd;
                     useView python:obj.portal_type in viewActions;
                     itemUrl python:useView and obj.getURL() + '/view' or obj.getURL();
                     item_wf_state obj/review_state;
                     item_wf_state_class python:'state-' + plone_view.normalizeString(item_wf_state);
                     item_type obj/portal_type;
-                    item_type_class python:'contenttype-' + plone_view.normalizeString(item_type);"
+                    supress_icon    view/data/no_icons;
+                    supress_thumb   view/data/no_thumbs;
+                    thumb_size view/thumb_size;
+                    item_type_class python:('contenttype-' + plone_view.normalizeString(item_type)) if not supress_icon else ''"
         tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
         <a href="#"
            tal:attributes="href itemUrl;
                            class  string:tile $item_type_class $item_wf_state_class;
                            title obj/Description">
-            <img class="image-icon"
-               tal:define="thumb python:obj.getURL()+'/@@images/image/icon'"
-               tal:condition=" obj/getIcon"
-               tal:attributes="href obj/getURL;
-                               src  string:$thumb;">
+            <img class="mime-icon" tal:condition="python:item_type =='File' and not supress_icon"
+                 tal:attributes="href obj/getURL;
+                                 src python:view.getMimeTypeIcon(obj);"> 
+
+            <img tal:condition="python: obj.getIcon and (view.thumb_size()!='none') and not supress_thumb"
+                 tal:replace="structure python:image_scale.tag(obj, 'image', scale=thumb_size, css_class='pull-right image-'+thumb_size)" />
+
             <span tal:replace="obj/Title">
              Title </span>
             <span class="portletItemDetails"

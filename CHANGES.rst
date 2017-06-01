@@ -10,7 +10,14 @@ Breaking changes:
 
 New features:
 
-- *add item here*
+- add options to supress icons,
+  read thumbsize from registry plus  option to override thumbsize individually 
+  or suppress thumbs. 
+  Replace paper clip (fontello icon) with mimetype icon
+  from mimetype registry for files
+  https://github.com/plone/Products.CMFPlone/issues/1734 
+  applied https://github.com/plone/Products.CMFPlone/issues/1483
+  [fgrcon]
 
 Bug fixes:
 
