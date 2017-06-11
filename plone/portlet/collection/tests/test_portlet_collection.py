@@ -15,7 +15,7 @@ from plone.portlet.collection.testing import (
     PLONE_PORTLET_COLLECTION_INTEGRATION_TESTING
 )
 
-import unittest2 as unittest
+import unittest
 
 
 class TestPortlet(unittest.TestCase):
