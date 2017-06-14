@@ -18,8 +18,10 @@ from zExceptions import NotFound
 from zope import schema
 from zope.component import getUtility
 from zope.interface import implementer
+
 import os
 import random
+
 
 COLLECTIONS = []
 
@@ -89,26 +91,28 @@ class ICollectionPortlet(IPortletDataProvider):
         default=True)
 
     no_icons = schema.Bool(
-        title=_(u"Suppress Icons "),
+        title=_(u"Suppress Icons"),
         description=_(
-            u"If enabled, the portlet will not show document type icons"),
+            u"If enabled, the portlet will not show document type icons."
+        ),
         required=True,
         default=False)
 
-    ov_thumbsize = schema.TextLine(
-        title=_(u"Override thumb size "),
-        description=_(u"<br><ul><li> Enter a valid scale name"
-             u"(see 'Image Handling' control panel) to override"
-             u" e.g. icon, tile, thumb, mini, preview, ... )  </li>"
-             u"<li>leave empty to use default "
-             u"(see 'Site' control panel)</li></ul>"),
+    thumb_scale = schema.TextLine(
+        title=_(u"Override thumb scale"),
+        description=_(
+            u"Enter a valid scale name"
+            u" (see 'Image Handling' control panel) to override"
+            u" (e.g. icon, tile, thumb, mini, preview, ... )."
+            u" Leave empty to use default (see 'Site' control panel)."
+        ),
         required=False,
         default=u'')
-    
+
     no_thumbs = schema.Bool(
-        title=_(u"Suppress thumbs "),
+        title=_(u"Suppress thumbs"),
         description=_(
-            u"If enabled, the portlet will not show thumbs"),
+            u"If enabled, the portlet will not show thumbs."),
         required=True,
         default=False)
 
@@ -127,14 +131,14 @@ class Assignment(base.Assignment):
     exclude_context = False
     no_icons = False
     no_thumbs = False
-    ov_thumbsize = ''
+    thumb_scale = None
     # bbb
     target_collection = None
 
     def __init__(self, header=u"", uid=None, limit=None,
                  random=False, show_more=True, show_dates=False,
-                 exclude_context=True, no_icons = False, no_thumbs = False,               
-                 ov_thumbsize = ''):       
+                 exclude_context=True, no_icons=False, no_thumbs=False,
+                 thumb_scale=None):
         self.header = header
         self.uid = uid
         self.limit = limit
@@ -144,7 +148,7 @@ class Assignment(base.Assignment):
         self.exclude_context = exclude_context
         self.no_icons = no_icons
         self.no_thumbs = no_thumbs
-        self.ov_thumbsize = ov_thumbsize
+        self.thumb_scale = thumb_scale
 
     @property
     def title(self):
@@ -209,7 +213,9 @@ class Renderer(base.Renderer):
             if limit and limit > 0:
                 # pass on batching hints to the catalog
                 results = collection.queryCatalog(
-                    batch=True, b_size=limit  + exclude_context)
+                    batch=True,
+                    b_size=limit + exclude_context
+                )
                 results = results._sequence
             else:
                 results = collection.queryCatalog()
@@ -248,8 +254,7 @@ class Renderer(base.Renderer):
         return uuidToObject(self.data.uid)
 
     def include_empty_footer(self):
-        """
-        Whether or not to include an empty footer element when the more
+        """Whether or not to include an empty footer element when the more
         link is turned off.
         Always returns True (this method provides a hook for
         sub-classes to override the default behaviour).
@@ -257,31 +262,33 @@ class Renderer(base.Renderer):
         return True
 
     @memoize
-    def thumb_size(self):
-        ''' use  overrride value or read thumb_size from registry
-            image sizes must fit to value in allowed image sizes
-            none will suppress thumb!
-        '''
-        if self.data.ov_thumbsize > ' ':
-            return  self.data.ov_thumbsize
+    def thumb_scale(self):
+        """Use override value or read thumb_scale from registry.
+        Image sizes must fit to value in allowed image sizes.
+        None will suppress thumb.
+        """
+        if self.data.thumb_scale:
+            return self.data.thumb_scale
         registry = getUtility(IRegistry)
         settings = registry.forInterface(
             ISiteSchema, prefix="plone", check=False)
         if settings.no_thumbs_portlet:
-            return 'none'         
-        thumb_size_portlet = settings.thumb_size_portlet
-        return thumb_size_portlet
+            return None
+        thumb_scale_portlet = settings.thumb_scale_portlet
+        return thumb_scale_portlet
 
-    def getMimeTypeIcon(self,obj):     
+    def getMimeTypeIcon(self, obj):
         fileo = obj.getObject().file
         portal_url = getNavigationRoot(self.context)
-        mtt = getToolByName(self.context,'mimetypes_registry')
-        if fileo.contentType: 
+        mtt = getToolByName(self.context, 'mimetypes_registry')
+        if fileo.contentType:
             ctype = mtt.lookup(fileo.contentType)
-            return os.path.join(portal_url,
-                 guess_icon_path(ctype[0])
-                )
-        return None 
+            return os.path.join(
+                portal_url,
+                guess_icon_path(ctype[0])
+            )
+        return None
+
 
 class AddForm(formhelper.AddForm):
     schema = ICollectionPortlet
