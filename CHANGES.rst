@@ -21,6 +21,11 @@ New features:
 
 Bug fixes:
 
+
+- fixed css-classes for thumb scales ...
+  https://github.com/plone/Products.CMFPlone/issues/2077
+  [fgrcon]
+  
 - Remove unittest2 dependency
   [kakshay21]
 
