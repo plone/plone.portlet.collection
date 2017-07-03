@@ -4,10 +4,6 @@ Changelog
 3.2 (unreleased)
 ----------------
 
-Breaking changes:
-
-- *add item here*
-
 New features:
 
 - add options to supress icons,
