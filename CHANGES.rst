@@ -1,7 +1,7 @@
 Changelog
 =========
 
-3.2.1 (unreleased)
+3.3.0 (unreleased)
 ------------------
 
 Breaking changes:
@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Fix collection selection for Plone 5.1
+  [agitator]
 
 
 3.2 (2017-07-03)
@@ -23,11 +24,11 @@ Bug fixes:
 New features:
 
 - add options to supress icons,
-  read thumb_scale from registry plus  option to override thumb_scale individually 
-  or suppress thumbs. 
+  read thumb_scale from registry plus  option to override thumb_scale individually
+  or suppress thumbs.
   Replace paper clip (fontello icon) with mimetype icon
   from mimetype registry for files
-  https://github.com/plone/Products.CMFPlone/issues/1734 
+  https://github.com/plone/Products.CMFPlone/issues/1734
   applied https://github.com/plone/Products.CMFPlone/issues/1483
   [fgrcon]
 
@@ -37,7 +38,7 @@ Bug fixes:
 - fixed css-classes for thumb scales ...
   https://github.com/plone/Products.CMFPlone/issues/2077
   [fgrcon]
-  
+
 - Remove unittest2 dependency
   [kakshay21]
 

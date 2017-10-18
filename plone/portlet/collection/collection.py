@@ -5,6 +5,8 @@ from plone.app.portlets.browser import formhelper
 from plone.app.portlets.portlets import base
 from plone.app.uuid.utils import uuidToObject
 from plone.app.vocabularies.catalog import CatalogSource
+from plone.app.z3cform.widget import RelatedItemsFieldWidget
+from plone.autoform.directives import widget
 from plone.i18n.normalizer.interfaces import IIDNormalizer
 from plone.memoize.instance import memoize
 from plone.portlet.collection import PloneMessageFactory as _
@@ -47,12 +49,19 @@ class ICollectionPortlet(IPortletDataProvider):
         description=_(u"Title of the rendered portlet"),
         required=True)
 
+    widget(
+        'uid',
+        RelatedItemsFieldWidget,
+        pattern_options={
+            'selectableTypes': ['Collection']
+        }
+    )
     uid = schema.Choice(
         title=_(u"Target collection"),
         description=_(u"Find the collection which provides the items to list"),
         required=True,
-        source=CatalogSource(portal_type=('Topic', 'Collection')),
-        )
+        vocabulary='plone.app.vocabularies.Catalog',
+    )
 
     limit = schema.Int(
         title=_(u"Limit"),
