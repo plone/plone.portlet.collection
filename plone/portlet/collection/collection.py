@@ -53,8 +53,7 @@ class ICollectionPortlet(IPortletDataProvider):
         'uid',
         RelatedItemsFieldWidget,
         pattern_options={
-            'selectableTypes': ['Collection'],
-            'scanSelection': True,
+            'selectableTypes': ['Collection']
         }
     )
     uid = schema.Choice(
