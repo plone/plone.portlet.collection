@@ -17,6 +17,9 @@ Bug fixes:
 - Fix collection selection for Plone 5.1
   [agitator]
 
+- Fix test. Portlet renderer no longer mixes in Acquisition.Explicit.
+  [pbauer]
+
 
 3.2 (2017-07-03)
 ----------------

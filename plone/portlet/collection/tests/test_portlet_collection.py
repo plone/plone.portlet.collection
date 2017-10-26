@@ -104,7 +104,6 @@ class TestRenderer(unittest.TestCase):
             context=self.portal,
             assignment=collection.Assignment(header=u"title")
         )
-        r = r.__of__(self.folder)
         r.update()
         output = r.render()
         self.assertTrue('title' in output)
