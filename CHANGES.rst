@@ -4,14 +4,6 @@ Changelog
 3.3.0 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - Fix collection selection for Plone 5.1
