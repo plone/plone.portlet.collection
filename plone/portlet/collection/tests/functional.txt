@@ -76,9 +76,10 @@ Go to the home page and see if the portlet looks OK.
     >>> portlet = html.xpath('//*[contains(@class, "portletCollection")]')[0]
     >>> portlet_contents = etree.tostring(portlet)
     >>> def strip_white_space(contents):
+    ...     contents = contents.decode('utf-8') if not isinstance(contents, str) else contents
     ...     lines = [line.strip() for line in contents.splitlines() if line.strip()]
     ...     return '\n'.join(lines)
-    >>> print strip_white_space(portlet_contents)
+    >>> print(strip_white_space(portlet_contents))
     <section class="portlet portletCollection portlet-collection-test-collection"><header class="portletHeader">
     <span class="portletTopLeft"...
     <a href="http://nohost/plone/test-collection">
@@ -113,7 +114,7 @@ Now test what happens if we toggle the "show more link" option.
     True
     >>> browser.getControl(label="Show more... link").selected = False
     >>> browser.getControl('Save').click()
-    >>> print browser.url
+    >>> print(browser.url)
     http://nohost/plone/@@manage-portlets
 
 Go back to the home page and see if it looks OK.
@@ -122,7 +123,7 @@ Go back to the home page and see if it looks OK.
     >>> html = etree.HTML(browser.contents)
     >>> portlet = html.xpath('//*[contains(@class, "portletCollection")]')[0]
     >>> portlet_contents = etree.tostring(portlet)
-    >>> '<a href="http://nohost/plone/test-collection">' in portlet_contents
+    >>> b'<a href="http://nohost/plone/test-collection">' in portlet_contents
     False
 
 Now test what happens if we toggle the "show dates" option.
@@ -133,7 +134,7 @@ Now test what happens if we toggle the "show dates" option.
     True
     >>> browser.getControl("Show dates").selected = True
     >>> browser.getControl("Save").click()
-    >>> print browser.url
+    >>> print(browser.url)
     http://nohost/plone/@@manage-portlets
 
 Make sure the dates show up::
