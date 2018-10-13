@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Fix tests in Python 3
+  [davisagli]
 
 
 3.3.0 (2017-11-24)
