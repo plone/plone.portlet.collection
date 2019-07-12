@@ -1,10 +1,9 @@
+# -*- coding: utf-8 -*-
 from ComputedAttribute import ComputedAttribute
-from plone.app.layout.navigation.defaultpage import isDefaultPage
 from plone.app.layout.navigation.root import getNavigationRoot
 from plone.app.portlets.browser import formhelper
 from plone.app.portlets.portlets import base
 from plone.app.uuid.utils import uuidToObject
-from plone.app.vocabularies.catalog import CatalogSource
 from plone.app.z3cform.widget import RelatedItemsFieldWidget
 from plone.autoform.directives import widget
 from plone.i18n.normalizer.interfaces import IIDNormalizer
@@ -24,6 +23,10 @@ from zope.interface import implementer
 import os
 import random
 
+try:
+    from Products.CMFPlone.defaultpage import is_default_page
+except ImportError:
+    from plone.app.layout.navigation.defaultpage import isDefaultPage as is_default_page  # noqa
 
 COLLECTIONS = []
 
@@ -125,6 +128,7 @@ class ICollectionPortlet(IPortletDataProvider):
         required=True,
         default=False)
 
+
 @implementer(ICollectionPortlet)
 class Assignment(base.Assignment):
     """
@@ -196,7 +200,7 @@ class Renderer(base.Renderer):
         if collection is None:
             return
         parent = collection.aq_parent
-        if isDefaultPage(parent, collection):
+        if is_default_page(parent, collection):
             collection = parent
         return collection.absolute_url()
 

@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Fix deprecated import ``isDefaultPage``.
+  [jensens]
 
 
 3.3.1 (2018-11-02)
