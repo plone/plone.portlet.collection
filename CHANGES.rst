@@ -1,16 +1,8 @@
 Changelog
 =========
 
-3.3.2 (unreleased)
+3.3.2 (2019-08-23)
 ------------------
-
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
 
 Bug fixes:
 
