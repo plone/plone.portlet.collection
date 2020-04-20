@@ -1,20 +1,12 @@
 Changelog
 =========
 
-3.2.1 (unreleased)
-------------------
+.. You should *NOT* be adding new change log entries to this file.
+   You should create a file in the news directory instead.
+   For helpful instructions, please see:
+   https://github.com/plone/plone.releaser/blob/master/ADD-A-NEWS-ITEM.rst
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
-Bug fixes:
-
-- *add item here*
+.. towncrier release notes start
 
 
 3.2 (2017-07-03)
@@ -23,11 +15,11 @@ Bug fixes:
 New features:
 
 - add options to supress icons,
-  read thumb_scale from registry plus  option to override thumb_scale individually 
-  or suppress thumbs. 
+  read thumb_scale from registry plus  option to override thumb_scale individually
+  or suppress thumbs.
   Replace paper clip (fontello icon) with mimetype icon
   from mimetype registry for files
-  https://github.com/plone/Products.CMFPlone/issues/1734 
+  https://github.com/plone/Products.CMFPlone/issues/1734
   applied https://github.com/plone/Products.CMFPlone/issues/1483
   [fgrcon]
 
@@ -37,7 +29,7 @@ Bug fixes:
 - fixed css-classes for thumb scales ...
   https://github.com/plone/Products.CMFPlone/issues/2077
   [fgrcon]
-  
+
 - Remove unittest2 dependency
   [kakshay21]
 
