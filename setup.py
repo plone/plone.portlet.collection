@@ -5,9 +5,10 @@ version = '2.1.11.dev0'
 setup(name='plone.portlet.collection',
       version=version,
       description="A portlet that fetches results from a collection",
-      long_description=open("README.txt").read() + "\n" +
-      open("CHANGES.txt").read(),
+      long_description=open("README.rst").read() + "\n" +
+      open("CHANGES.rst").read(),
       classifiers=[
+          "Development Status :: 5 - Production/Stable",
           "Environment :: Web Environment",
           "Framework :: Plone",
           "Framework :: Plone :: 4.2",
