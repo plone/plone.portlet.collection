@@ -58,7 +58,7 @@ Use the 'Add portlet' select box to add a collection portlet.
     >>> add_portlet_select.getControl(value=val).selected = True
     >>> leftcolumn_form.submit()
     >>> import re  # '\s' is white space, '+' is at least one, '*' is zero or more matches.
-    >>> re.search('<h1\s+class="documentFirstHeading"\s*>\s*Add Collection Portlet\s*</h1>', browser.contents) is not None
+    >>> re.search(r'<h1\s+class="documentFirstHeading"\s*>\s*Add Collection Portlet\s*</h1>', browser.contents) is not None
     True
 
 Use your new collection for testing. It should already be available at the root
@@ -113,7 +113,7 @@ Now test what happens if we toggle the "show more link" option.
 
     >>> browser.open(portal_url + '/@@manage-portlets')
     >>> browser.getLink(url="http://nohost/plone/++contextportlets++plone.leftcolumn/test-collection/edit?referer=http%3A//nohost/plone/%40%40manage-portlets").click()
-    >>> re.search('<h1\s+class="documentFirstHeading"\s*>\s*Edit Collection Portlet\s*</h1>', browser.contents) is not None
+    >>> re.search(r'<h1\s+class="documentFirstHeading"\s*>\s*Edit Collection Portlet\s*</h1>', browser.contents) is not None
     True
     >>> browser.getControl(label="Show more... link").selected = False
     >>> browser.getControl('Save').click()
@@ -133,7 +133,7 @@ Now test what happens if we toggle the "show dates" option.
 
     >>> browser.open(portal_url + '/@@manage-portlets')
     >>> browser.getLink(url="http://nohost/plone/++contextportlets++plone.leftcolumn/test-collection/edit?referer=http%3A//nohost/plone/%40%40manage-portlets").click()
-    >>> re.search('<h1\s+class="documentFirstHeading"\s*>\s*Edit Collection Portlet\s*</h1>', browser.contents) is not None
+    >>> re.search(r'<h1\s+class="documentFirstHeading"\s*>\s*Edit Collection Portlet\s*</h1>', browser.contents) is not None
     True
     >>> browser.getControl("Show dates").selected = True
     >>> browser.getControl("Save").click()
@@ -148,5 +148,5 @@ Make sure the dates show up::
 
     >>> from DateTime import DateTime
     >>> cur_year = DateTime().year()
-    >>> re.search('<span class="portletItemDetails">.*{}.*</span>'.format(cur_year), browser.contents) is not None
+    >>> re.search(r'<span class="portletItemDetails">.*{}.*</span>'.format(cur_year), browser.contents) is not None
     True
