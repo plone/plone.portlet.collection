@@ -14,7 +14,10 @@ Set up testbrowser::
     >>> from plone.app.testing import login
     >>> login(layer['portal'], 'admin')
     >>> app = layer['app']
-    >>> from plone.testing.z2 import Browser
+    >>> try:
+    ...     from plone.testing.zope import Browser
+    ... except ImportError:
+    ...     from plone.testing.z2 import Browser
     >>> browser = Browser(app)
     >>> browser.handleErrors = False
     >>> browser.addHeader('Authorization', 'Basic admin:secret')
