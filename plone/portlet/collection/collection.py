@@ -12,6 +12,7 @@ from plone.portlet.collection import PloneMessageFactory as _
 from plone.portlets.interfaces import IPortletDataProvider
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.defaultpage import is_default_page
 from Products.CMFPlone.interfaces.controlpanel import ISiteSchema
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.MimetypesRegistry.MimeTypeItem import guess_icon_path
@@ -23,10 +24,6 @@ from zope.interface import implementer
 import os
 import random
 
-try:
-    from Products.CMFPlone.defaultpage import is_default_page
-except ImportError:
-    from plone.app.layout.navigation.defaultpage import isDefaultPage as is_default_page  # noqa
 
 COLLECTIONS = []
 
