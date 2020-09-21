@@ -1,3 +1,0 @@
-Removed fallback import of is_default_page.
-Fixed various DeprecationWarnings.
-[maurits]

@@ -8,6 +8,17 @@ Changelog
 
 .. towncrier release notes start
 
+3.3.5 (2020-09-21)
+------------------
+
+Bug fixes:
+
+
+- Removed fallback import of is_default_page.
+  Fixed various DeprecationWarnings.
+  [maurits] (#3130)
+
+
 3.3.4 (2020-09-07)
 ------------------
 
