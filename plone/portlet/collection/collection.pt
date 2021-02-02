@@ -46,7 +46,7 @@
              Title </span>
             <span class="portletItemDetails"
                   tal:condition="view/data/show_dates"
-                  tal:define="obj_date obj/start | obj/effective | obj/modified"
+                  tal:define="obj_date obj/start | obj/effective | obj/modified | obj/Date;"
                   tal:content="python:toLocalizedTime(obj_date)">
                 Date
             </span>
