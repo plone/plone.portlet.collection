@@ -48,10 +48,10 @@
 
             <span tal:replace="obj/Title">Title</span>
           </a>
-          <time class="portletItemDetails"
-              tal:condition="view/data/show_dates"
-              tal:define="obj_date obj/Date"
-              tal:content="python:toLocalizedTime(obj_date)">May 5</time>
+          <div class="portletItemDetails"
+               tal:condition="view/data/show_dates"
+               tal:define="obj_date python:obj.start and obj.start or obj.Date();"
+               tal:content="python:toLocalizedTime(obj_date)">May 5</div>
         </li>
         </tal:events>
       </ul>

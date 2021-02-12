@@ -140,10 +140,10 @@ Now test what happens if we toggle the "show dates" option.
 Make sure the dates show up::
 
     >>> browser.open(portal_url)
-    >>> '<time class="portletItemDetails"' in browser.contents
+    >>> '<div class="portletItemDetails"' in browser.contents
     True
 
     >>> from DateTime import DateTime
     >>> cur_year = DateTime().year()
-    >>> re.search(r'<time class="portletItemDetails".*{}.*</time>'.format(cur_year), browser.contents) is not None
+    >>> re.search(r'<div class="portletItemDetails".*{}.*</div>'.format(cur_year), browser.contents) is not None
     True
