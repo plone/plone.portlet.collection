@@ -83,31 +83,28 @@ Go to the home page and see if the portlet looks OK.
     ...     lines = [line.strip() for line in contents.splitlines() if line.strip()]
     ...     return '\n'.join(lines)
     >>> print(strip_white_space(portlet_contents))
-    <section class="portlet portletCollection portlet-collection-test-collection"><header class="portletHeader">
-    <span class="portletTopLeft"...
+    <div class="card portlet portletCollection portlet-collection-test-collection">
+    <div class="card-header">
     <a href="http://nohost/plone/test-collection">
     <span>Test Collection</span>
     </a>
-    <span class="portletTopRight"...
-    </header>
-    <ul class="portletContent">
+    </div>
+    <div class="card-body">
+    <ul>
     <li class="portletItem odd">
     <a href="http://nohost/plone/test-document" class="tile contenttype-document state-private" title="">
     Test Document
     </a>
     </li>
     </ul>
-    <footer class="portletFooter">
-    <span class="portletBottomLeft"...
-    <span>
+    </div>
+    <div class="card-footer">
     <a href="http://nohost/plone/test-collection">
     <span class="hiddenStructure">Test Collection - </span>
-    <span>More...
+    <span>More&#8230;</span>
     </a>
-    </span>
-    <span class="portletBottomRight"...
-    </footer>
-    </section>
+    </div>
+    </div>
 
 Now test what happens if we toggle the "show more link" option.
 
@@ -143,10 +140,10 @@ Now test what happens if we toggle the "show dates" option.
 Make sure the dates show up::
 
     >>> browser.open(portal_url)
-    >>> '<span class="portletItemDetails">' in browser.contents
+    >>> '<div class="portletItemDetails"' in browser.contents
     True
 
     >>> from DateTime import DateTime
     >>> cur_year = DateTime().year()
-    >>> re.search(r'<span class="portletItemDetails">.*{}.*</span>'.format(cur_year), browser.contents) is not None
+    >>> re.search(r'<div class="portletItemDetails".*{}.*</div>'.format(cur_year), browser.contents) is not None
     True
