@@ -8,6 +8,16 @@ Changelog
 
 .. towncrier release notes start
 
+3.3.6 (2021-02-16)
+------------------
+
+Bug fixes:
+
+
+- Show start date in portlet if available.
+  [agitator] (#25)
+
+
 3.3.5 (2020-09-21)
 ------------------
 
