@@ -28,7 +28,7 @@ Set up testbrowser::
     >>> browser.getLink(url=portal_url + "/folder_factories").click()
     >>> browser.getControl(label="Page").selected = True
     >>> browser.getControl(name="form.button.Add").click()
-    >>> browser.getControl(name="form.widgets.IDublinCore.title").value = "Test Document"
+    >>> browser.getControl(name="form.widgets.title").value = "Test Document"
     >>> browser.getControl("Save").click()
     >>> 'Item created' in browser.contents
     True
