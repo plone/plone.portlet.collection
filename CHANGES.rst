@@ -8,6 +8,23 @@ Changelog
 
 .. towncrier release notes start
 
+4.0.0a3 (2022-04-08)
+--------------------
+
+Breaking changes:
+
+
+- Update for Plone 6 with Bootstrap markup
+  [petschki, agitator] (#28)
+
+
+Bug fixes:
+
+
+- Use @@iconresolver to display icons
+  [pbauer] (#31)
+
+
 4.0.0a2 (2021-04-19)
 --------------------
 
