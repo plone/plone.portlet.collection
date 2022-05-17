@@ -110,7 +110,7 @@
         <span class="hiddenStructure"><span tal:replace="view/data/header" />
           -
         </span>
-        <span i18n:translate="more_url">More</span>
+        <span i18n:translate="more_url">More&hellip;</span>
       </a>
     </div>
 
