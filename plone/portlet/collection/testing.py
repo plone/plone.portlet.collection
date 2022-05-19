@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from plone.app.contenttypes.testing import PLONE_APP_CONTENTTYPES_FIXTURE
+from plone.app.contenttypes.testing import PLONE_FIXTURE
 from plone.app.testing import applyProfile
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
@@ -12,7 +12,7 @@ from zope.configuration import xmlconfig
 
 class PlonePortletCollection(PloneSandboxLayer):
 
-    defaultBases = (PLONE_APP_CONTENTTYPES_FIXTURE,)
+    defaultBases = (PLONE_FIXTURE,)
 
     def setUpZope(self, app, configurationContext):
         import plone.portlet.collection
