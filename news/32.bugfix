@@ -1,0 +1,3 @@
+Update ICollectionPortlet Schema 
+set Option `required` to `False` of schema.Bool
+[1letter]

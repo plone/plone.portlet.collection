@@ -29,101 +29,114 @@ COLLECTIONS = []
 
 try:
     from plone.app.collection.interfaces import ICollection
+
     COLLECTIONS.append(ICollection.__identifier__)
 except ImportError:
     pass
 
 try:
     from plone.app.contenttypes.interfaces import ICollection
+
     COLLECTIONS.append(ICollection.__identifier__)
 except ImportError:
     pass
 
 
 class ICollectionPortlet(IPortletDataProvider):
-    """A portlet which renders the results of a collection object.
-    """
+    """A portlet which renders the results of a collection object."""
 
     header = schema.TextLine(
-        title=_(u"Portlet header"),
-        description=_(u"Title of the rendered portlet"),
-        required=True)
+        title=_("Portlet header"),
+        description=_("Title of the rendered portlet"),
+        required=True,
+    )
 
     widget(
-        'uid',
+        "uid",
         RelatedItemsFieldWidget,
-        pattern_options={
-            'selectableTypes': ['Collection']
-        }
+        pattern_options={"selectableTypes": ["Collection"]},
     )
     uid = schema.Choice(
-        title=_(u"Target collection"),
-        description=_(u"Find the collection which provides the items to list"),
+        title=_("Target collection"),
+        description=_("Find the collection which provides the items to list"),
         required=True,
-        vocabulary='plone.app.vocabularies.Catalog',
+        vocabulary="plone.app.vocabularies.Catalog",
     )
 
     limit = schema.Int(
-        title=_(u"Limit"),
-        description=_(u"Specify the maximum number of items to show in the "
-                      u"portlet. Leave this blank to show all items."),
-        required=False)
-
-    random = schema.Bool(
-        title=_(u"Select random items"),
-        description=_(u"If enabled, items will be selected randomly from the "
-                      u"collection, rather than based on its sort order."),
-        required=True,
-        default=False)
-
-    show_more = schema.Bool(
-        title=_(u"Show more... link"),
-        description=_(u"If enabled, a more... link will appear in the footer "
-                      u"of the portlet, linking to the underlying "
-                      u"Collection."),
-        required=True,
-        default=True)
-
-    show_dates = schema.Bool(
-        title=_(u"Show dates"),
-        description=_(u"If enabled, effective dates will be shown underneath "
-                      u"the items listed."),
-        required=True,
-        default=False)
-
-    exclude_context = schema.Bool(
-        title=_(u"Exclude the Current Context"),
+        title=_("Limit"),
         description=_(
-            u"If enabled, the listing will not include the current item the "
-            u"portlet is rendered for if it otherwise would be."),
-        required=True,
-        default=True)
-
-    no_icons = schema.Bool(
-        title=_(u"Suppress Icons"),
-        description=_(
-            u"If enabled, the portlet will not show document type icons."
-        ),
-        required=True,
-        default=False)
-
-    thumb_scale = schema.TextLine(
-        title=_(u"Override thumb scale"),
-        description=_(
-            u"Enter a valid scale name"
-            u" (see 'Image Handling' control panel) to override"
-            u" (e.g. icon, tile, thumb, mini, preview, ... )."
-            u" Leave empty to use default (see 'Site' control panel)."
+            "Specify the maximum number of items to show in the "
+            "portlet. Leave this blank to show all items."
         ),
         required=False,
-        default=u'')
+    )
+
+    random = schema.Bool(
+        title=_("Select random items"),
+        description=_(
+            "If enabled, items will be selected randomly from the "
+            "collection, rather than based on its sort order."
+        ),
+        required=False,
+        default=False,
+    )
+
+    show_more = schema.Bool(
+        title=_("Show more... link"),
+        description=_(
+            "If enabled, a more... link will appear in the footer "
+            "of the portlet, linking to the underlying "
+            "Collection."
+        ),
+        required=False,
+        default=True,
+    )
+
+    show_dates = schema.Bool(
+        title=_("Show dates"),
+        description=_(
+            "If enabled, effective dates will be shown underneath " "the items listed."
+        ),
+        required=False,
+        default=False,
+    )
+
+    exclude_context = schema.Bool(
+        title=_("Exclude the Current Context"),
+        description=_(
+            "If enabled, the listing will not include the current item the "
+            "portlet is rendered for if it otherwise would be."
+        ),
+        required=False,
+        default=True,
+    )
+
+    no_icons = schema.Bool(
+        title=_("Suppress Icons"),
+        description=_("If enabled, the portlet will not show document type icons."),
+        required=False,
+        default=False,
+    )
+
+    thumb_scale = schema.TextLine(
+        title=_("Override thumb scale"),
+        description=_(
+            "Enter a valid scale name"
+            " (see 'Image Handling' control panel) to override"
+            " (e.g. icon, tile, thumb, mini, preview, ... )."
+            " Leave empty to use default (see 'Site' control panel)."
+        ),
+        required=False,
+        default="",
+    )
 
     no_thumbs = schema.Bool(
-        title=_(u"Suppress thumbs"),
-        description=_(
-            u"If enabled, the portlet will not show thumbs."),
-        required=True,
-        default=False)
+        title=_("Suppress thumbs"),
+        description=_("If enabled, the portlet will not show thumbs."),
+        required=False,
+        default=False,
+    )
 
 
 @implementer(ICollectionPortlet)
@@ -133,7 +146,8 @@ class Assignment(base.Assignment):
     This is what is actually managed through the portlets UI and associated
     with columns.
     """
-    header = u""
+
+    header = ""
     limit = None
     random = False
     show_more = True
@@ -145,10 +159,19 @@ class Assignment(base.Assignment):
     # bbb
     target_collection = None
 
-    def __init__(self, header=u"", uid=None, limit=None,
-                 random=False, show_more=True, show_dates=False,
-                 exclude_context=True, no_icons=False, no_thumbs=False,
-                 thumb_scale=None):
+    def __init__(
+        self,
+        header="",
+        uid=None,
+        limit=None,
+        random=False,
+        show_more=True,
+        show_dates=False,
+        exclude_context=True,
+        no_icons=False,
+        no_thumbs=False,
+        thumb_scale=None,
+    ):
         self.header = header
         self.uid = uid
         self.limit = limit
@@ -172,17 +195,18 @@ class Assignment(base.Assignment):
         # attribute, which is probably because it has an old
         # 'target_collection' attribute that needs to be converted.
         path = self.target_collection
-        portal = getToolByName(self, 'portal_url').getPortalObject()
+        portal = getToolByName(self, "portal_url").getPortalObject()
         try:
-            collection = portal.unrestrictedTraverse(path.lstrip('/'))
+            collection = portal.unrestrictedTraverse(path.lstrip("/"))
         except (AttributeError, KeyError, TypeError, NotFound):
             return
         return collection.UID()
+
     uid = ComputedAttribute(_uid, 1)
 
 
 class Renderer(base.Renderer):
-    _template = ViewPageTemplateFile('collection.pt')
+    _template = ViewPageTemplateFile("collection.pt")
     render = _template
 
     def __init__(self, *args):
@@ -217,22 +241,21 @@ class Renderer(base.Renderer):
         results = []
         collection = self.collection()
         if collection is not None:
-            context_path = '/'.join(self.context.getPhysicalPath())
-            exclude_context = getattr(self.data, 'exclude_context', False)
+            context_path = "/".join(self.context.getPhysicalPath())
+            exclude_context = getattr(self.data, "exclude_context", False)
             limit = self.data.limit
             if limit and limit > 0:
                 # pass on batching hints to the catalog
                 results = collection.queryCatalog(
-                    batch=True,
-                    b_size=limit + exclude_context
+                    batch=True, b_size=limit + exclude_context
                 )
                 results = results._sequence
             else:
                 results = collection.queryCatalog()
             if exclude_context:
                 results = [
-                    brain for brain in results
-                    if brain.getPath() != context_path]
+                    brain for brain in results if brain.getPath() != context_path
+                ]
             if limit and limit > 0:
                 results = results[:limit]
         return results
@@ -242,8 +265,8 @@ class Renderer(base.Renderer):
         results = []
         collection = self.collection()
         if collection is not None:
-            context_path = '/'.join(self.context.getPhysicalPath())
-            exclude_context = getattr(self.data, 'exclude_context', False)
+            context_path = "/".join(self.context.getPhysicalPath())
+            exclude_context = getattr(self.data, "exclude_context", False)
             results = collection.queryCatalog(sort_on=None)
             if results is None:
                 return []
@@ -251,8 +274,8 @@ class Renderer(base.Renderer):
 
             if exclude_context:
                 results = [
-                    brain for brain in results
-                    if brain.getPath() != context_path]
+                    brain for brain in results if brain.getPath() != context_path
+                ]
             if len(results) < limit:
                 limit = len(results)
             results = random.sample(results, limit)
@@ -280,8 +303,7 @@ class Renderer(base.Renderer):
         if self.data.thumb_scale:
             return self.data.thumb_scale
         registry = getUtility(IRegistry)
-        settings = registry.forInterface(
-            ISiteSchema, prefix="plone", check=False)
+        settings = registry.forInterface(ISiteSchema, prefix="plone", check=False)
         if settings.no_thumbs_portlet:
             return None
         thumb_scale_portlet = settings.thumb_scale_portlet
@@ -290,21 +312,17 @@ class Renderer(base.Renderer):
     def getMimeTypeIcon(self, obj):
         fileo = obj.getObject().file
         portal_url = getNavigationRoot(self.context)
-        mtt = getToolByName(self.context, 'mimetypes_registry')
+        mtt = getToolByName(self.context, "mimetypes_registry")
         if fileo.contentType:
             ctype = mtt.lookup(fileo.contentType)
-            return os.path.join(
-                portal_url,
-                guess_icon_path(ctype[0])
-            )
+            return os.path.join(portal_url, guess_icon_path(ctype[0]))
         return None
 
 
 class AddForm(formhelper.AddForm):
     schema = ICollectionPortlet
-    label = _(u"Add Collection Portlet")
-    description = _(u"This portlet displays a listing of items from a "
-                    u"Collection.")
+    label = _("Add Collection Portlet")
+    description = _("This portlet displays a listing of items from a " "Collection.")
 
     def create(self, data):
         return Assignment(**data)
@@ -312,6 +330,5 @@ class AddForm(formhelper.AddForm):
 
 class EditForm(formhelper.EditForm):
     schema = ICollectionPortlet
-    label = _(u"Edit Collection Portlet")
-    description = _(u"This portlet displays a listing of items from a "
-                    u"Collection.")
+    label = _("Edit Collection Portlet")
+    description = _("This portlet displays a listing of items from a " "Collection.")
