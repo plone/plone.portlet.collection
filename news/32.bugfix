@@ -1,3 +1,0 @@
-Update ``ICollectionPortlet`` schema.
-Set option ``required`` to ``False`` of boolean fields.
-[1letter]

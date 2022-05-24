@@ -8,6 +8,17 @@ Changelog
 
 .. towncrier release notes start
 
+4.0.0a4 (2022-05-24)
+--------------------
+
+Bug fixes:
+
+
+- Update ``ICollectionPortlet`` schema.
+  Set option ``required`` to ``False`` of boolean fields.
+  [1letter] (#32)
+
+
 4.0.0a3 (2022-04-08)
 --------------------
 
