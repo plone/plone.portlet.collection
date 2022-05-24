@@ -310,9 +310,7 @@ class TestCollectionQuery(unittest.TestCase):
         The exclude context field controls including self in the results.
         """
         for idx in range(4):
-            self._createType(
-                self.folder, "News Item", "foo-news-item-title-{0}".format(idx)
-            )
+            self._createType(self.folder, "News Item", f"foo-news-item-title-{idx}")
         self.folder.collection.query = [
             {
                 "i": "portal_type",
@@ -323,8 +321,7 @@ class TestCollectionQuery(unittest.TestCase):
         self.folder.collection.sort_on = "id"
         context = self.folder["foo-news-item-title-1"]
         included = [
-            self.folder["foo-news-item-title-{0}".format(idx)].absolute_url()
-            for idx in (0, 2)
+            self.folder[f"foo-news-item-title-{idx}"].absolute_url() for idx in (0, 2)
         ]
         limited = self.folder["foo-news-item-title-3"].absolute_url()
 

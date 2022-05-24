@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from ComputedAttribute import ComputedAttribute
 from plone.app.layout.navigation.root import getNavigationRoot
 from plone.app.portlets.browser import formhelper
