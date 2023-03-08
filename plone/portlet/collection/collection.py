@@ -272,9 +272,11 @@ class Renderer(base.Renderer):
             limit = self.data.limit and min(len(results), self.data.limit) or 1
 
             if exclude_context:
-                results = [
+                results = tuple(
                     brain for brain in results if brain.getPath() != context_path
-                ]
+                )
+            else:
+                results = tuple(results)
             if len(results) < limit:
                 limit = len(results)
             results = random.sample(results, limit)
