@@ -33,6 +33,7 @@ setup(
     namespace_packages=["plone", "plone.portlet"],
     include_package_data=True,
     zip_safe=False,
+    python_requires=">=3.8",
     install_requires=[
         "setuptools",
         "plone.memoize",
