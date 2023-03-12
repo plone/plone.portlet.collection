@@ -19,7 +19,6 @@ import unittest
 
 
 class TestPortlet(unittest.TestCase):
-
     layer = PLONE_PORTLET_COLLECTION_INTEGRATION_TESTING
 
     def setUp(self):
@@ -72,7 +71,6 @@ class TestPortlet(unittest.TestCase):
 
 
 class TestRenderer(unittest.TestCase):
-
     layer = PLONE_PORTLET_COLLECTION_INTEGRATION_TESTING
 
     def setUp(self):
@@ -114,7 +112,6 @@ class TestRenderer(unittest.TestCase):
 
 
 class TestCollectionQuery(unittest.TestCase):
-
     layer = PLONE_PORTLET_COLLECTION_INTEGRATION_TESTING
 
     def setUp(self):
