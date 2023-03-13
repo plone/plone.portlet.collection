@@ -1,18 +1,18 @@
 from ComputedAttribute import ComputedAttribute
-from plone.app.layout.navigation.root import getNavigationRoot
 from plone.app.portlets.browser import formhelper
 from plone.app.portlets.portlets import base
 from plone.app.uuid.utils import uuidToObject
 from plone.app.z3cform.widget import RelatedItemsFieldWidget
 from plone.autoform.directives import widget
+from plone.base.defaultpage import is_default_page
+from plone.base.interfaces.controlpanel import ISiteSchema
+from plone.base.navigationroot import get_navigation_root
 from plone.i18n.normalizer.interfaces import IIDNormalizer
 from plone.memoize.instance import memoize
 from plone.portlet.collection import PloneMessageFactory as _
 from plone.portlets.interfaces import IPortletDataProvider
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.defaultpage import is_default_page
-from Products.CMFPlone.interfaces.controlpanel import ISiteSchema
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.MimetypesRegistry.MimeTypeItem import guess_icon_path
 from zExceptions import NotFound
@@ -310,7 +310,7 @@ class Renderer(base.Renderer):
 
     def getMimeTypeIcon(self, obj):
         fileo = obj.getObject().file
-        portal_url = getNavigationRoot(self.context)
+        portal_url = get_navigation_root(self.context)
         mtt = getToolByName(self.context, "mimetypes_registry")
         if fileo.contentType:
             ctype = mtt.lookup(fileo.contentType)
