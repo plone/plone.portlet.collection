@@ -24,23 +24,6 @@ import os
 import random
 
 
-COLLECTIONS = []
-
-try:
-    from plone.app.collection.interfaces import ICollection
-
-    COLLECTIONS.append(ICollection.__identifier__)
-except ImportError:
-    pass
-
-try:
-    from plone.app.contenttypes.interfaces import ICollection
-
-    COLLECTIONS.append(ICollection.__identifier__)
-except ImportError:
-    pass
-
-
 class ICollectionPortlet(IPortletDataProvider):
     """A portlet which renders the results of a collection object."""
 

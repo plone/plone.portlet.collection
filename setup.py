@@ -43,8 +43,6 @@ setup(
         "plone.app.vocabularies",
         "Products.GenericSetup",
         "Products.MimetypesRegistry",
-        "plone.app.collection",
-        "plone.app.contenttypes",
         "plone.app.querystring",
         "plone.app.uuid",
         "plone.app.z3cform",
