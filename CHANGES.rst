@@ -145,7 +145,7 @@ Bug fixes:
 
 New features:
 
-- add options to supress icons,
+- add options to suppress icons,
   read thumb_scale from registry plus  option to override thumb_scale individually
   or suppress thumbs.
   Replace paper clip (fontello icon) with mimetype icon
