@@ -35,6 +35,7 @@ setup(
     zip_safe=False,
     python_requires=">=3.8",
     install_requires=[
+        "setuptools",
         "ExtensionClass",
         "plone.base",
         "plone.memoize",
