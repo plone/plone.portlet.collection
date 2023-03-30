@@ -2,4 +2,14 @@
 # https://github.com/plone/meta/tree/master/config/default
 [meta]
 template = "default"
-commit-id = "a533099d"
+commit-id = "c79ab88f"
+
+[check-manifest]
+additional-ignores = [
+    "*.cfg",
+    ]
+
+[dependencies]
+mappings = [
+    "ExtensionClass = ['ComputedAttribute']",
+    ]
