@@ -1,15 +1,15 @@
 # Generated from:
 # https://github.com/plone/meta/tree/master/config/default
+# See the inline comments on how to expand/tweak this configuration file
 [meta]
 template = "default"
-commit-id = "c79ab88f"
+commit-id = "7723aeaf"
 
-[check-manifest]
-additional-ignores = [
+[pyproject]
+check_manifest_ignores = """
     "*.cfg",
-    ]
-
-[dependencies]
-mappings = [
+"""
+dependencies_ignores = "['plone.app.vocabularies']"
+dependencies_mappings = [
     "ExtensionClass = ['ComputedAttribute']",
     ]
