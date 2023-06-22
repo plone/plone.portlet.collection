@@ -8,6 +8,22 @@ Changelog
 
 .. towncrier release notes start
 
+4.0.3 (2023-06-22)
+------------------
+
+Bug fixes:
+
+
+- Fix TypeError with "Select random items" option. @alecpm (#36)
+
+
+Internal:
+
+
+- Update configuration files.
+  [plone devs] (7723aeaf)
+
+
 4.0.2 (2023-04-14)
 ------------------
 
