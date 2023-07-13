@@ -255,7 +255,7 @@ class Renderer(base.Renderer):
                     if brain.getPath() != context_path]
             if len(results) < limit:
                 limit = len(results)
-            results = random.sample(results, limit)
+            results = random.sample(list(results), limit)
 
         return results
 
