@@ -8,6 +8,16 @@ Changelog
 
 .. towncrier release notes start
 
+3.3.7 (2023-07-20)
+------------------
+
+Bug fixes:
+
+
+- Convert collection to list before randomizing it
+  [witsch] (#42)
+
+
 3.3.6 (2021-02-16)
 ------------------
 
