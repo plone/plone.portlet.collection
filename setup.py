@@ -36,7 +36,6 @@ setup(
     python_requires=">=3.8",
     install_requires=[
         "setuptools",
-        "ExtensionClass",
         "plone.base",
         "plone.memoize",
         "plone.portlets",
@@ -50,6 +49,7 @@ setup(
         "plone.autoform",
         "plone.i18n",
         "plone.registry",
+        "Zope",
     ],
     extras_require={
         "test": [
