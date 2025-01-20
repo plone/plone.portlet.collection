@@ -2,7 +2,7 @@ from ComputedAttribute import ComputedAttribute
 from plone.app.portlets.browser import formhelper
 from plone.app.portlets.portlets import base
 from plone.app.uuid.utils import uuidToObject
-from plone.app.z3cform.widget import RelatedItemsFieldWidget
+from plone.app.z3cform.widgets.relateditems import RelatedItemsFieldWidget
 from plone.autoform.directives import widget
 from plone.base.defaultpage import is_default_page
 from plone.base.interfaces.controlpanel import ISiteSchema
