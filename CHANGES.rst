@@ -8,6 +8,22 @@ Changelog
 
 .. towncrier release notes start
 
+4.0.4 (2025-01-23)
+------------------
+
+Bug fixes:
+
+
+- Fix DeprecationWarnings. [maurits] (#4090)
+
+
+Internal:
+
+
+- Update configuration files.
+  [plone devs] (6e36bcc4)
+
+
 4.0.3 (2023-06-22)
 ------------------
 
