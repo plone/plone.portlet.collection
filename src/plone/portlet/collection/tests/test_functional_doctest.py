@@ -1,7 +1,8 @@
 """Functional Doctests for plone.portlet.collection.
 
-   These test are only triggered when Plone 4 (and plone.testing) is installed.
+These test are only triggered when Plone 4 (and plone.testing) is installed.
 """
+
 from plone.portlet.collection.testing import PLONE_PORTLET_COLLECTION_FUNCTIONAL_TESTING
 from plone.testing import layered
 
