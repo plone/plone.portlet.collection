@@ -1,6 +1,5 @@
 from setuptools import setup
 
-
 version = "5.0.0a2.dev0"
 
 setup(
@@ -20,6 +19,9 @@ setup(
         "Programming Language :: Python",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
     ],
     keywords="collection portlet",
     author="Plone Foundation",
@@ -29,28 +31,8 @@ setup(
     include_package_data=True,
     zip_safe=False,
     python_requires=">=3.10",
-    install_requires=[
-        "plone.base",
-        "plone.memoize",
-        "plone.portlets",
-        "plone.app.portlets",
-        "plone.app.vocabularies",
-        "Products.GenericSetup",
-        "Products.MimetypesRegistry",
-        "plone.app.querystring",
-        "plone.app.uuid",
-        "plone.app.z3cform",
-        "plone.autoform",
-        "plone.i18n",
-        "plone.registry",
-        "Zope",
-    ],
+    install_requires=[],
     extras_require={
-        "test": [
-            "lxml",
-            "plone.testing",
-            "plone.app.testing",
-            "plone.app.contenttypes[test]",
-        ],
+        "test": [],
     },
 )
