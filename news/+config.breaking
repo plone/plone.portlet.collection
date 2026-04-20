@@ -1,0 +1,3 @@
+make package pip install compatible @1letter
+
+move deps from setup to ignore in meta.toml, because the import of all relevant code could not be checked by z3c.dependencychecker via `uvx --with tox-uv tox -e dependencies` @1letter
