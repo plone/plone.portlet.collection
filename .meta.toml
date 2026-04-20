@@ -12,9 +12,10 @@ test_matrix = {"6.2" = ["*"]}
 check_manifest_ignores = """
     "*.cfg",
 """
-dependencies_ignores = "['plone.app.vocabularies', 'Products.GenericSetup', 'Products.MimetypesRegistry', 'Zope', 'plone.app.portlets', 'plone.app.querystring', 'plone.app.uuid', 'plone.app.z3cform', 'plone.autoform', 'plone.base', 'plone.i18n', 'plone.memoize', 'plone.portlets', 'plone.registry', 'plone.app.contenttypes', 'plone.app.robotframework', 'plone.app.testing']"
+dependencies_ignores = "['AccessControl', 'ExtensionClass', 'zope.component', 'zope.i18nmessageid', 'zope.interface', 'zope.schema', 'plone.app.vocabularies', 'Products.GenericSetup', 'Products.MimetypesRegistry', 'plone.app.portlets', 'plone.app.querystring', 'plone.app.uuid', 'plone.app.z3cform', 'plone.autoform', 'plone.base', 'plone.i18n', 'plone.memoize', 'plone.portlets', 'plone.registry', 'plone.app.contenttypes', 'plone.app.robotframework', 'plone.app.testing','lxml', 'plone.testing', 'transaction', 'zope.configuration']"
 dependencies_mappings = [
     "ExtensionClass = ['ComputedAttribute']",
     ]
+
 
 

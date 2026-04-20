@@ -45,12 +45,22 @@ setup(
         "plone.autoform",
         "plone.i18n",
         "plone.registry",
+        "AccessControl",
+        "zope.component",
+        "zope.i18nmessageid",
+        "zope.interface",
+        "zope.schema",
     ],
     extras_require={
         "test": [
             "plone.app.testing",
             "plone.app.robotframework",
             "plone.app.contenttypes",
+            "lxml",
+            "plone.testing",
+            "transaction",
+            "zope.component",
+            "zope.configuration",
         ],
     },
     entry_points="""
