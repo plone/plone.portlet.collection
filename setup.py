@@ -31,8 +31,30 @@ setup(
     include_package_data=True,
     zip_safe=False,
     python_requires=">=3.10",
-    install_requires=[],
+    install_requires=[
+        "plone.base",
+        "plone.memoize",
+        "plone.portlets",
+        "plone.app.portlets",
+        "plone.app.vocabularies",
+        "Products.GenericSetup",
+        "Products.MimetypesRegistry",
+        "plone.app.querystring",
+        "plone.app.uuid",
+        "plone.app.z3cform",
+        "plone.autoform",
+        "plone.i18n",
+        "plone.registry",
+    ],
     extras_require={
-        "test": [],
+        "test": [
+            "plone.app.testing",
+            "plone.app.robotframework",
+            "plone.app.contenttypes",
+        ],
     },
+    entry_points="""
+    [plone.autoinclude.plugin]
+    target = plone
+    """,
 )
