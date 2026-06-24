@@ -10,7 +10,6 @@ import doctest
 import pprint
 import unittest
 
-
 optionflags = (
     doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE | doctest.REPORT_ONLY_FIRST_FAILURE
 )
