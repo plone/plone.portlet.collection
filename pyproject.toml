@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "plone.portlet.collection"
-version = "6.0.0.dev0"
+version = "6.0.0a1.dev0"
 description = "Empty transitional package, the code moved to plone.portlets. Formerly: A portlet that fetches results from a collection."
 readme = "README.rst"
 license = "GPL-2.0-only"
