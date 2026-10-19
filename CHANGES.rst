@@ -8,6 +8,25 @@ Changelog
 
 .. towncrier release notes start
 
+6.0.0a1 (2026-10-19)
+--------------------
+
+Breaking changes:
+
+
+- This distribution is now empty and only depends on ``plone.portlets``, which contains the code since Plone 6.3.
+  Import paths do not change.
+  See `PLIP 4137 <https://github.com/plone/Products.CMFPlone/issues/4137>`_.
+  @jensens (#4137)
+
+
+Internal:
+
+
+- Move package metadata from ``setup.py`` to ``pyproject.toml``.
+  [plone devs]
+
+
 5.0.1 (2026-06-26)
 ------------------
 
